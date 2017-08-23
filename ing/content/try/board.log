@@ -1,0 +1,84 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=latex 2017.4.15)  20 APR 2017 23:24
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**board.tex
+(./board.tex
+LaTeX2e <2016/03/31> patch level 3
+Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
+(/usr/share/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/share/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf/tex/latex/igo/igo.sty
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+++++++++++++ igo.sty - January 2007 - 0.62 +++++++++++ 
++ A TeX package to manipulate Go games and positions + 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+(/usr/share/texmf/tex/latex/igo/repeat.tex Loading loop macro, version 0.93
+\REPdepth=\count87
+)
+\igo@count=\count88
+\igo@endwhile=\count89
+\igo@fontsize=\count90
+\igo@minrow=\count91
+\igo@maxrow=\count92
+\igo@mincol=\count93
+\igo@maxcol=\count94
+\igo@box=\box26
+\igo@dimen=\dimen103
+\igo@board=\count95
+\igo@boardlabelnum=\count96
+)
+(./board.aux)
+\openout1 = `board.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 3.
+LaTeX Font Info:    ... okay on input line 3.
+\REPcounti=\count97
+\REPtoksi=\toks14
+\REPwtesti=\toks15
+\REPutesti=\toks16
+\REPcountii=\count98
+\REPtoksii=\toks17
+\REPwtestii=\toks18
+\REPutestii=\toks19
+ [1
+
+] (./board.aux) ) 
+Here is how much of TeX's memory you used:
+ 698 strings out of 493014
+ 8955 string characters out of 6139343
+ 65469 words of memory out of 5000000
+ 4308 multiletter control sequences out of 15000+600000
+ 5624 words of font info for 28 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 23i,4n,17p,375b,320s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+Output written on board.dvi (1 page, 3340 bytes).
