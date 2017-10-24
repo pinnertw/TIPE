@@ -21,7 +21,7 @@ let q = snd size;;
 
 (* create a board with size x * y *)
 let init_board x y =
-	Array.make_matrix x y 0;;
+	make_matrix x y 0;;
 
 let board = init_board p q;;
 
@@ -58,7 +58,7 @@ let is_free x y =
 	0 <= x && 0 <= y && x < p && y < q && board.(x).(y) = 0;;
 (* tri_insertion for line*)
 let tri_insertion tab =
-	let l = Array.length tab in
+	let l = vect_length tab in
 	let rec aux pivot index = match index with
 		| _ when pivot >= l	-> ()
 		| 0	-> aux (pivot+1) (pivot+1)
@@ -107,7 +107,7 @@ let win x y color =
 
 (* evalue_function *)
 let evalue_function x y color=
-	if not (is_free x y) then 0 else 
+	if not is_free x y then 0 else 
 	let t = line x y color in match t.(0), t.(1) with
 		| a, _	when a >= 15 -> 1000
 		| 14, _ | 13, 13 | 13, 11	-> 90
@@ -127,7 +127,7 @@ let score x y color=
 
 (* print the board with their score *)
 let score_board color=
-	let tab = Array.make_matrix p q 0 in
+	let tab = make_matrix p q 0 in
 	for i = 0 to p - 1 do
 		for j = 0 to q - 1 do
 			tab.(i).(j) <- score i j color
@@ -147,12 +147,11 @@ let turn color =
 			| _, _	-> aux_list i (j+1) acc taille max
 	in
 	let couple = aux_list 0 0 [] 0 0 in
-	let a = Random.int (snd couple) in
+	let a = random__int (snd couple) in
 	let rec aux_final j lis = match j with
-		| x 	when x = a	-> List.hd lis
-		| _	-> aux_final (j+1) (List.tl lis)
+		| x 	when x = a	-> hd lis
+		| _	-> aux_final (j+1) (tl lis)
 	in aux_final 0 (fst couple);;
 (* try *)
 let my = black_move;;
 let adv = white_move;;
-print_string "Hellow world!";;

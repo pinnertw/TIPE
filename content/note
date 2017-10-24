@@ -1,0 +1,6 @@
+jeux non coopératifs, séquentiel, finis, à somme nulle   
+make_matrix -> Array.make_matrix
+vect_length -> Array.length
+random__int -> Random.int
+hd	-> List.hd
+tl	-> List.tl
