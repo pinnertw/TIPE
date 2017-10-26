@@ -1,7 +1,7 @@
 (* black = 1; white = 2; none = 0 *)
 (* need w stones to win *)
-let w = 5;;
-let size = (15, 15);;
+let w = 4;;
+let size = (10, 10);;
 let p = fst size;;
 let q = snd size;;
 (* some functions finished:
@@ -86,7 +86,7 @@ let line x y color =
          + 3
          and
       (* num2 *)
-			num2 = aux (x - 1, y - 1) (function (x, y) -> (x - 1, y - 1))
+         num2 = aux (x - 1, y - 1) (function (x, y) -> (x - 1, y - 1))
          	   + aux (x + 1, y + 1) (function (x, y) -> (x + 1, y + 1))
          	   + 3
          and
@@ -103,7 +103,7 @@ let line x y color =
 
 (* win *)
 let win x y color =
-	(line x y color).(0)>= w;;
+	(line x y color).(0)>= 3 * w;;
 
 (* evalue_function *)
 let evalue_function x y color=
@@ -152,7 +152,37 @@ let turn color =
 		| x 	when x = a	-> List.hd lis
 		| _	-> aux_final (j+1) (List.tl lis)
 	in aux_final 0 (fst couple);;
+
+(* print board *)
+let print_board () =
+        let rec aux i j = match i, j with
+                | t, _  when t = p      -> ()
+                | _, t  when t = q      -> print_newline (); aux (i + 1) (-1)
+                | (-1), (-1)    -> print_int 0; print_string "  "; aux (-1) 0
+                | _, (-1)  -> print_int i; print_char ' '; if i < 10 then print_char ' '; aux i (j + 1)
+                | (-1), _  -> print_int j; print_char ' '; aux i (j + 1)
+                | _, _  -> print_int board.(i).(j); print_char ' '; if j > 8 then print_char ' '; aux i (j+1)
+        in aux (-1) (-1); print_newline ();;
+print_board;;
 (* try *)
 let my = black_move;;
 let adv = white_move;;
-print_string "Hellow world!";;
+print_board ();;
+let rec game aqui  = match aqui with
+        | 2     -> let i, j = turn 2 in 
+                if not (win i j 2) then begin
+                (white_move i j); print_board (); game 1 end 
+                else begin white_move i j; print_string "white win!!"end 
+        | 1     -> let i = read_int () in let j = read_int () in 
+                if not (win i j 1) then begin
+                (black_move i j); print_board (); game 2 end 
+                else begin black_move i j; print_string "black win!!!"end
+        | _     -> print_string "wrong player";;
+
+game 1;;
+
+
+
+
+
+
