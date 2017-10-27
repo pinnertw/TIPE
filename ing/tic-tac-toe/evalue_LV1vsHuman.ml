@@ -168,21 +168,20 @@ print_board;;
 let my = black_move;;
 let adv = white_move;;
 print_board ();;
-let rec game aqui  = match aqui with
+let rec game aqui = match aqui with 
         | 2     -> let i, j = turn 2 in 
-                if not (win i j 2) then begin
-                (white_move i j); print_board (); game 1 end 
-                else begin white_move i j; print_string "white win!!"end 
-        | 1     -> let i = read_int () in let j = read_int () in 
-                if not (win i j 1) then begin
-                (black_move i j); print_board (); game 2 end 
-                else begin black_move i j; print_string "black win!!!"end
+                (match board.(i).(j) with 
+                | 0     when win i j 2  -> white_move i j; print_board (); print_string "White Win!!"
+                | 0                     -> white_move i j; print_board (); 
+                                           print_string "black turn"; print_newline (); game 1
+                | _                     -> print_board (); print_string "Move Invalid"; print_newline ();
+                                           print_string "white turn"; print_newline (); game 2)
+        | 1     -> let i = read_int () and j = read_int () in 
+                (match board.(i).(j) with
+                | 0     when win i j 1  -> black_move i j; print_board (); print_string "Black Win!!!"
+                | 0                     -> black_move i j; print_board ();
+                                           print_string "white turn"; print_newline (); game 2
+                | _                     -> print_board (); print_string "Move Invalid"; print_newline ();
+                                           print_string "black turn"; print_newline (); game 1)
         | _     -> print_string "wrong player";;
-
 game 1;;
-
-
-
-
-
-
