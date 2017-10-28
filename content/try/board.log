@@ -1,12 +1,11 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=latex 2017.4.15)  20 APR 2017 23:24
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Arch Linux) (preloaded format=pdflatex 2017.8.23)  28 OCT 2017 11:15
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
 **board.tex
 (./board.tex
-LaTeX2e <2016/03/31> patch level 3
-Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
+LaTeX2e <2017-04-15>
+Babel <3.12> and hyphenation patterns for 84 language(s) loaded.
 (/usr/share/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
 (/usr/share/texmf-dist/tex/latex/base/size10.clo
@@ -71,14 +70,27 @@ LaTeX Font Info:    ... okay on input line 3.
 \REPutestii=\toks19
  [1
 
-] (./board.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+(./board.aux) ) 
 Here is how much of TeX's memory you used:
- 698 strings out of 493014
- 8955 string characters out of 6139343
- 65469 words of memory out of 5000000
- 4308 multiletter control sequences out of 15000+600000
+ 699 strings out of 492990
+ 8965 string characters out of 6138688
+ 65975 words of memory out of 5000000
+ 4322 multiletter control sequences out of 15000+600000
  5624 words of font info for 28 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  23i,4n,17p,375b,320s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </home/pengwei/.texlive/texmf-var/fonts/pk/ljfour/igo/igoblacki
+20.600pk> </home/pengwei/.texlive/texmf-var/fonts/pk/ljfour/igo/igowhitei20.600
+pk> </home/pengwei/.texlive/texmf-var/fonts/pk/ljfour/igo/igo20.600pk> </home/p
+engwei/.texlive/texmf-var/fonts/pk/ljfour/igo/igoblacki10.600pk> </home/pengwei
+/.texlive/texmf-var/fonts/pk/ljfour/igo/igowhitei10.600pk> </home/pengwei/.texl
+ive/texmf-var/fonts/pk/ljfour/igo/igo10.600pk></usr/share/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmr10.pfb>
+Output written on board.pdf (1 page, 16434 bytes).
+PDF statistics:
+ 62 PDF objects out of 1000 (max. 8388607)
+ 31 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
-Output written on board.dvi (1 page, 3340 bytes).
