@@ -10,11 +10,11 @@ let evalue_function x y color=
         | a, b, 1, _    when a - b = 2  -> (a - 1) / 3 * 2
         | a, b, 1, 0                    -> ((a - 1) / 3 - 1) * 2
         | a, _, 2, _                    -> ((a - 2) / 3) * 2
-        | _, _, _, _                    -> 0
+        | _, _, _, _                    -> 0;;
 
 (* the score by evalue_function *)
 let score x y color= 
-	max (evalue_function x y (opponent color)) ((evalue_function x y color) + 1);;
+    evalue_function x y color - evalue_function x y (Base.opponent color);;
 
 (* AI *)
 let turn color =
