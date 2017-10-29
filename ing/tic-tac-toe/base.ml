@@ -1,9 +1,12 @@
-(* black = 1; white = 2; none = 0 *)
+(* Color and its basic functions *)
 type color = Black | White | Non;;
 let opponent color = match color with
     | Black -> White
     | White -> Black
     | _     -> Non;;
+
+(* init Random *)
+Random.init (int_of_float (1000000. *. (Sys.time () )));;
 
 (* need w stones to win *)
 let w = 4;;
@@ -93,52 +96,14 @@ let line x y color =
 let win x y color =
 	(line x y color).(0)>= 3 * w;;
 
-(* evalue_function *)
-let evalue_function x y color=
-	if not (is_free x y) then 0 else 
-	let t = line x y color in match t.(0), t.(1), t.(0) mod 3, t.(1) mod 3 with
-        | a, _, _, _    when a >= w * 3 -> 2 * w + 10
-        | a, _, _, _    when a <= 5     -> 0
-        | a, b, 1, _    when a = b      -> (a - 1) / 3 * 2
-        | a, b, 1, _    when a - b = 2  -> (a - 1) / 3 * 2
-        | a, b, 1, 0                    -> ((a - 1) / 3 - 1) * 2
-        | a, _, 2, _                    -> ((a - 2) / 3) * 2
-        | _, _, _, _                    -> 0
-
-(* the score by evalue_function *)
-let score x y color= 
-	max (evalue_function x y (opponent color)) ((evalue_function x y color) + 1);;
-
 (* print the board with their score *)
-let score_board color=
+let score_board color score_func=
 	let tab = Array.make_matrix p q 0 in
 	for i = 0 to p - 1 do
 		for j = 0 to q - 1 do
-			tab.(i).(j) <- score i j color
+			tab.(i).(j) <- score_func i j color
 		done;
 	done; tab;;
-
-(* AI *)
-let turn color =
-    let rec aux_list i j acc taille max=
-        let note = score i j color in match i, j with
-			| t, _	when t = p	-> acc, taille
-			| _, t	when t = q	-> aux_list (i + 1) 0 acc taille max
-			| _, _	when note > max	-> 
-									aux_list i (j + 1) [(i, j)] 1 note
-			| _, _	when note = max	-> 
-									aux_list i (j + 1) ((i, j)::acc) (taille + 1)max
-			| _, _	-> aux_list i (j + 1) acc taille max
-	in
-	let couple = aux_list 0 0 [] 0 0 in
-        if (snd couple = p * q ) then ((p / 2, q / 2)) else
-        begin
-	        let a = Random.int (snd couple) in
-	        let rec aux_final j lis = match j with
-		        | x 	when x = a	-> List.hd lis
-		        | _	-> aux_final (j + 1) (List.tl lis)
-	        in aux_final 0 (fst couple)
-        end;;
 
 (* print board *)
 let print_board () =
@@ -167,9 +132,17 @@ let print_board () =
                                aux i (j + 1)
     in aux (-1) (-1); print_newline ();;
 
-(* game AI V.S. Human *)
-let rec game aqui = match aqui with 
-    | White -> let i, j = turn White in 
+let human_move a = let () = print_string "Vertical:" in
+               let i = read_int () in 
+               let () = print_newline () in
+               let () = print_string "Horizontal:" in
+               let j = read_int () in 
+               i, j;;
+
+
+(* game black_func V.S. white_func *)
+let rec move aqui black_func white_func = match aqui with 
+    | White -> let i, j = white_func White in 
         (match board.(i).(j) with 
             | Non when win i j White    -> white_move i j;
                                         print_board ();
@@ -178,19 +151,15 @@ let rec game aqui = match aqui with
                                         print_board (); 
                                         print_string "black turn"; 
                                         print_newline (); 
-                                        game Black
+                                        move Black black_func white_func
             | _                         -> print_board (); 
                                         print_string "Move Invalid"; 
                                         print_newline ();
                                         print_string "white turn"; 
                                         print_newline (); 
-                                        game White                          )
-    | Black     -> let () = print_string "Vertical:" in
-               let i = read_int () in 
-               let () = print_newline () in
-               let () = print_string "Horizontal:" in
-               let j = read_int () in 
-        (match board.(i).(j) with
+                                        move White black_func white_func )
+    | Black     -> let i, j = black_func Black in
+            (match board.(i).(j) with
             | Non     when win i j Black -> black_move i j; 
                                         print_board (); 
                                         print_string "Black Win!!!"
@@ -198,22 +167,13 @@ let rec game aqui = match aqui with
                                         print_board ();
                                         print_string "white turn"; 
                                         print_newline (); 
-                                        game White
+                                        move White black_func white_func
             | _                         -> print_board (); 
                                         print_string "Move Invalid"; 
                                         print_newline ();
                                         print_string "black turn"; 
                                         print_newline (); 
-                                        game Black                      )
-    | _     -> print_string "wrong player";;
-
-let gameon i = match i with
-    | 1     -> print_string "Human first"; 
-               print_newline (); 
-               game Black
-    | 2     -> print_string "AI first"; 
-               print_newline (); 
-               game White
+                                        move Black black_func white_func )
     | _     -> print_string "wrong player";;
 
 let instruction () =
@@ -221,7 +181,14 @@ let instruction () =
     print_int w;
     print_string " in a line to win!";
     print_newline ();;
-(* try *)
-instruction ();;
-Random.init (int_of_float (1000000. *. (Sys.time ())));;
-gameon ((Random.int 2) + 1);;
+
+let gameon black_func white_func = 
+    instruction (); 
+    match Random.int 2 with
+    | 0     -> print_string "Black first"; 
+               print_newline (); 
+               move Black black_func white_func
+    | 1     -> print_string "White first"; 
+               print_newline (); 
+               move White black_func white_func
+    | _     -> print_string "wrong player";;
