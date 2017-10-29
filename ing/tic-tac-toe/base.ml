@@ -9,10 +9,20 @@ let opponent color = match color with
 Random.init (int_of_float (1000000. *. (Sys.time () )));;
 
 (* need w stones to win *)
-let w = 4;;
-let size = (11, 11);;
-let p = fst size;;
-let q = snd size;;
+let init_game () =  let () = print_string "Need how many in a line to win?" in
+                    let w = read_int ()in
+                    let () = print_newline () in 
+                    let () = print_string "What is the size of the board?" in 
+                    let () = print_newline () in 
+                    let () = print_string "Vertical:" in 
+                    let p = read_int () in
+                    let () = print_newline () in 
+                    let () = print_string "Horizontal:" in
+                    let q = read_int () in
+                    let () = print_newline () in
+                    w, p, q;;
+                
+let w, p, q = init_game ();;
 
 let init_board x y =
 	Array.make_matrix x y Non;;
