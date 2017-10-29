@@ -1,4 +1,6 @@
 jeux non coopératifs, séquentiel, finis, à somme nulle   
+
+# Syntaxe
 make_matrix -> Array.make_matrix
 vect_length -> Array.length
 random__int -> Random.int

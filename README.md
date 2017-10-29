@@ -11,6 +11,12 @@ evalue Lv1 		-> evaluer la note d'une position avec une fonction simple
 
 evalue Lv2		-> avec l'arbre, qui est plus intelligente en général.
 
+Si vous voulez changer le code, aller vers 
+
+1. allez vers TIPE/ing/tic-tac-toe/
+2. ocamlc -c base.ml
+3. ocamlc base.cmo (the file with .ml que vous avez changé) -o "Le nom de ce programme"
+
 ----------------------------Gomoku----------------------------------------
 Cette intelligence artificialle peut jouer avec le manager suivant:
 
