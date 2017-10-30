@@ -29,6 +29,14 @@ let init_board x y =
 
 let board = init_board p q;;
 
+let board_free () = 
+    let rec aux i j = match i, j with
+        | t, _ when t = p   -> true
+        | _, t when t = q   -> aux (i + 1) 0
+        | _, _ when board.(i).(j) = Non -> aux i (j + 1)
+        | _, _  -> false
+    in aux 0 0 ;;
+
 (* restart the game *)
 let restart ()=
 	for i = 0 to p-1 do
@@ -37,17 +45,20 @@ let restart ()=
 		done
 	done;;
 
-(* place black at (x, y) *)
 let black_move x y =
 	if board.(x).(y) <> Non
 		then	print_string "not valid" 
 		else	board.(x).(y) <- Black;;
 
-(* place white at (x, y) *)
 let white_move x y =
 	if board.(x).(y) <> Non
 		then	print_string "not valid"
 		else	board.(x).(y) <- White;;
+
+let color_move x y color = match color with
+    | Black -> black_move x y
+    | White -> white_move x y
+    | _     -> print_string "not valid";;
 
 (* take back the stone at (x, y) *)
 let take_back x y =
@@ -133,8 +144,8 @@ let print_board () =
                            print_char ' '; 
                            aux i (j + 1)
         | _, _          -> (match board.(i).(j) with
-                            | Black -> print_char '*'
-                            | White -> print_char 'x'
+                            | Black -> print_char '@'
+                            | White -> print_char 'O'
                             | _ -> print_char ' ');
                            if j > 9 then 
                                print_char ' '; 

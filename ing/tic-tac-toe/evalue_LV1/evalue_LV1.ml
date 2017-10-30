@@ -25,17 +25,26 @@ let turn color =
 			| _, _	when note > max	-> 
 									aux_list i (j + 1) [(i, j)] 1 note
 			| _, _	when note = max	-> 
-									aux_list i (j + 1) ((i, j)::acc) (taille + 1)max
+									aux_list i (j + 1) ((i, j)::acc) (taille + 1) max
 			| _, _	-> aux_list i (j + 1) acc taille max
 	in
 	let couple = aux_list 0 0 [] 0 0 in
-        if (snd couple = p * q ) then ((p / 2, q / 2)) else
+        let i, j = 
+        if (board_free ()) then ((p / 2, q / 2)) else
         begin
 	        let a = Random.int (snd couple) in
 	        let rec aux_final j lis = match j with
 		        | x 	when x = a	-> List.hd lis
 		        | _	-> aux_final (j + 1) (List.tl lis)
 	        in aux_final 0 (fst couple)
-        end;;
+        end
+        in 
+        let () = print_char '('in
+        let () = print_int i in
+        let () = print_string ", " in
+        let () = print_int j in
+        let () = print_char ')' in
+        let () = print_newline () in
+        i, j;;
 
 gameon human_move turn;;
