@@ -37,24 +37,14 @@ let board_free () =
         | _, _  -> false
     in aux 0 0 ;;
 
-(* neighborhood *)
-let neighborhood = [|p; 0; q; 0|];;
+(* restart the game *)
+let restart ()=
+	for i = 0 to p-1 do
+		for j = 0 to q-1 do
+			board.(i).(j) <- Non
+		done
+	done;;
 
-let neighbor i j =
-    let new_neighborhood = Array.make 4 0 in
-        new_neighborhood.(0) <- max 0 (min neighborhood.(0) (i - 3));
-        new_neighborhood.(1) <- min p (max neighborhood.(1) (i + 3));
-        new_neighborhood.(2) <- max 0 (min neighborhood.(2) (j - 3));
-        new_neighborhood.(3) <- min q (max neighborhood.(3) (j + 3));
-        new_neighborhood;;
-
-let new_neighbor i j =
-    neighborhood.(0) <- max 0 (min neighborhood.(0) (i - 3));
-    neighborhood.(1) <- min p (max neighborhood.(1) (i + 3));
-    neighborhood.(2) <- max 0 (min neighborhood.(2) (j - 3));
-    neighborhood.(3) <- min q (max neighborhood.(3) (j + 3));;
-
-(* move *)
 let black_move x y =
 	if board.(x).(y) <> Non
 		then	print_string "not valid" 
@@ -81,18 +71,6 @@ let in_board x y =
 (* if (x, y) is free *)
 let is_free x y =
 	0 <= x && 0 <= y && x < p && y < q && board.(x).(y) = Non;;
-
-(* restart the game *)
-let restart ()=
-	for i = 0 to p-1 do
-		for j = 0 to q-1 do
-			board.(i).(j) <- Non
-        done;
-    done;
-    neighborhood.(0) <- p;
-    neighborhood.(1) <- 0;
-    neighborhood.(2) <- q;
-    neighborhood.(3) <- 0;;
 
 (* tri_insertion for line*)
 let tri_insertion tab =
@@ -138,6 +116,10 @@ let line x y color =
 (* win *)
 let win x y color =
 	(line x y color).(0)>= 3 * w;;
+
+let neighborhood = [|p, 0, q, 0|]
+
+let neighbor i j = neighborhood.(0) <- min
 
 (* print board *)
 let print_board () =

@@ -27,7 +27,7 @@ let rec alpha_beta i j a b color hauteur = match hauteur with
             | _, t  when t = q  -> aux (x + 1) 0 c d max
             | _, _  when board.(x).(y) <> Non   -> aux x (y + 1) c d max
             | _, _  ->  let z =  
-                        -(alpha_beta x y (-d) (-c) (color) (hauteur - 1))
+                        -(alpha_beta x y (-d) (-c) (opponent color) (hauteur - 1))
                         in
                         (match z with
                             | t when t >= b     -> t
@@ -47,9 +47,9 @@ let turn color =
             | _, _  when board.(i).(j) <> Non   -> aux_list i (j + 1) acc taille max
             | _, _  -> let note = alpha_beta i j (-score_max) score_max color 2 in 
                     (match note with
-                        | t when max = 0    ->
+(*                        | t when max = 0    ->
                                     aux_list i (j + 1) [(i, j)] 1 t
-                        | t when max > 0 && t > max ->
+                    *)                        | t when max > 0 && t > max ->
                                     aux_list i (j + 1) [(i, j)] 1 t
                         | t when t > 0 && max < 0   ->
                                     aux_list i (j + 1) [(i, j)] 1 t
@@ -78,4 +78,12 @@ let turn color =
         let () = print_newline () in
         i, j;;
 
-gameon human_move turn;;
+let score_board = Array.make_matrix p q 0;;
+let note color hauteur =
+    for i = 0 to p - 1 do
+        for j = 0 to q - 1 do
+            if board.(i).(j) = Non then
+            score_board.(i).(j) <- alpha_beta i j (-score_max) score_max color hauteur
+        done
+    done;;
+(* gameon human_move turn;; *)

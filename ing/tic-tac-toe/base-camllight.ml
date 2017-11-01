@@ -19,7 +19,7 @@ let init_game () =  let () = print_string "Need how many in a line to win?" in
                     let () = print_newline () in
                     w, p, q;;
                 
-let w, p, q = 3, 3, 3;;
+let w, p, q = 4, 15, 15;;
 
 let init_board x y =
 	make_matrix x y Non;;
@@ -160,8 +160,8 @@ let print_board () =
                            print_char ` `; 
                            aux i (j + 1)
         | _, _          -> (match board.(i).(j) with
-                            | Black -> print_char `*`
-                            | White -> print_char `x`
+                            | Black -> print_char `X`
+                            | White -> print_char `O`
                             | _ -> print_char ` `);
                            if j > 9 then 
                                print_char ` `; 
@@ -249,7 +249,7 @@ let score x y color=
 let score_max = 3 * w + 30;;
 
 let rec alpha_beta i j a b color hauteur = match hauteur with
-    | 1 -> score i j color 
+    | 1 -> score i j color
     | _ -> let best = -score_max in
            let () = color_move i j color in
            let rec aux x y c d max = match x, y with
@@ -260,6 +260,7 @@ let rec alpha_beta i j a b color hauteur = match hauteur with
                         -(alpha_beta x y (-d) (-c) (opponent color) (hauteur - 1))
                         in
                         (match z with
+                        	  | t when t = 0		  -> aux x (y + 1) c d max
                             | t when t >= d     -> t
                             | t when t > c      -> aux x (y + 1) t d t
                             | t when t > max    -> aux x (y + 1) c d t
@@ -269,22 +270,30 @@ let rec alpha_beta i j a b color hauteur = match hauteur with
            let () = take_back i j in
            score;;
 
+restart ();;
+
+print_board ();;
+take_back 14 3;;
+black_move 8 8;;
+take_back 8 8;;
+black_move 8 10;;
+score_board White (fun i j color-> (alpha_beta i j (-100) 100 color 1));;
+score_board Black (fun i j color-> alpha_beta i j (-100) 100 color 3);;
+
+turn Black;;
+white_move 7 7;;
+evalue_function 7 8 White;;
+
 (* AI *)
 let turn color =
     let rec aux_list i j acc taille max = match i, j with
 			| t, _	when t = p	-> acc, taille
 			| _, t	when t = q	-> aux_list (i + 1) 0 acc taille max
             | _, _  when board.(i).(j) <> Non   -> aux_list i (j + 1) acc taille max
-            | _, _  -> let note = alpha_beta i j (-score_max) score_max color 2 in 
+            | _, _  -> let note = alpha_beta i j (-score_max) score_max color 1 in 
                     (match note with
-                    	  | t when max = 0		->
-                    	  				  aux_list i (j + 1) [(i, j)] 1 t
-                        | t when max > 0 && t > max ->
-                                    aux_list i (j + 1) [(i, j)] 1 t
-							  | t when max < 0 && t > 0	->
-							  				  aux_list i (j + 1) [(i, j)] 1 t
-                        | t when max < 0 && t < max	->
-                        				  aux_list i (j + 1) [(i, j)] 1 t
+                      	 | t when abs t > max ->
+                                    aux_list i (j + 1) [(i, j)] 1 (abs t)
                         | t when t = max ->
                                     aux_list i (j + 1) ((i, j)::acc) (taille + 1) max
                         | _ -> aux_list i (j + 1) acc taille max)
@@ -307,17 +316,3 @@ let turn color =
         let () = print_char `)` in
         let () = print_newline () in
         i, j;;
-
-(* alpha_beta 7 8 (-42) 42 White 3;; *)
-white_move 1 1;;
-white_move 8 8;;
-white_move 3 3;;
-black_move 8 8;;
-turn White;;
-trace "alpha_beta";;
-untrace "alpha_beta";;
-untrace "score_board";;
-score_board Black (fun i j color-> alpha_beta i j (-100) 100 color 2);;
-print_board ();;
-restart ();;
-trace "restart";;
