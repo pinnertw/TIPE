@@ -23,8 +23,8 @@ let rec alpha_beta i j a b color hauteur = match hauteur with
     | _ -> let best = -score_max in
            let () = color_move i j color in
            let rec aux x y c d max = match x, y with
-            | t, _  when t = p  -> max
-            | _, t  when t = q  -> aux (x + 1) 0 c d max
+            | t, _  when t = neighborhood.(1) + 1  -> max
+            | _, t  when t = neighborhood.(3) + 1  -> aux (x + 1) neighborhood.(2) c d max
             | _, _  when board.(x).(y) <> Non   -> aux x (y + 1) c d max
             | _, _  ->  let z =  
                         -(alpha_beta x y (-d) (-c) (opponent color) (hauteur - 1))
@@ -35,15 +35,15 @@ let rec alpha_beta i j a b color hauteur = match hauteur with
                             | t when t > max    -> aux x (y + 1) c d t
                             | _                 -> aux x (y + 1) c d max)
            in
-           let score = aux 0 0 a b best in
+           let score = aux neighborhood.(0) neighborhood.(2) a b best in
            let () = take_back i j in
            score;;
 
 (* AI *)
 let turn color =
     let rec aux_list i j acc taille max = match i, j with
-			| t, _	when t = p	-> acc, taille
-			| _, t	when t = q	-> aux_list (i + 1) 0 acc taille max
+			| t, _	when t = neighborhood.(1) + 1	-> acc, taille
+			| _, t	when t = neighborhood.(3) + 1	-> aux_list (i + 1) neighborhood.(2) acc taille max
             | _, _  when board.(i).(j) <> Non   -> aux_list i (j + 1) acc taille max
             | _, _  -> let note = alpha_beta i j (-score_max) score_max color 2 in 
                     (match note with
@@ -59,7 +59,7 @@ let turn color =
                                     aux_list i (j + 1) ((i, j)::acc) (taille + 1) max
                         | _ -> aux_list i (j + 1) acc taille max)
 	in
-	let couple = aux_list 0 0 [] 0 0 in
+	let couple = aux_list neighborhood.(0) neighborhood.(2) [] 0 0 in
         let i, j = 
         if (board_free ()) then ((p / 2, q / 2)) else
         begin
@@ -76,6 +76,7 @@ let turn color =
         let () = print_int j in
         let () = print_char ')' in
         let () = print_newline () in
+        new_neighbor i j;
         i, j;;
 
 let score_board = Array.make_matrix p q 0;;

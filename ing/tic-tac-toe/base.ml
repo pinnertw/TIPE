@@ -38,14 +38,14 @@ let board_free () =
     in aux 0 0 ;;
 
 (* neighborhood *)
-let neighborhood = [|p; 0; q; 0|];;
+let neighborhood = [|p / 2; p / 2; q / 2; q / 2|];;
 
 let neighbor i j =
     let new_neighborhood = Array.make 4 0 in
         new_neighborhood.(0) <- max 0 (min neighborhood.(0) (i - 3));
-        new_neighborhood.(1) <- min p (max neighborhood.(1) (i + 3));
+        new_neighborhood.(1) <- min (p - 1) (max neighborhood.(1) (i + 3));
         new_neighborhood.(2) <- max 0 (min neighborhood.(2) (j - 3));
-        new_neighborhood.(3) <- min q (max neighborhood.(3) (j + 3));
+        new_neighborhood.(3) <- min (q - 1) (max neighborhood.(3) (j + 3));
         new_neighborhood;;
 
 let new_neighbor i j =
@@ -58,12 +58,12 @@ let new_neighbor i j =
 let black_move x y =
 	if board.(x).(y) <> Non
 		then	print_string "not valid" 
-		else	board.(x).(y) <- Black;;
+        else	board.(x).(y) <- Black;;
 
 let white_move x y =
 	if board.(x).(y) <> Non
 		then	print_string "not valid"
-		else	board.(x).(y) <- White;;
+        else	board.(x).(y) <- White;;
 
 let color_move x y color = match color with
     | Black -> black_move x y
@@ -89,10 +89,10 @@ let restart ()=
 			board.(i).(j) <- Non
         done;
     done;
-    neighborhood.(0) <- p;
-    neighborhood.(1) <- 0;
-    neighborhood.(2) <- q;
-    neighborhood.(3) <- 0;;
+    neighborhood.(0) <- p / 2;
+    neighborhood.(1) <- p / 2;
+    neighborhood.(2) <- q / 2;
+    neighborhood.(3) <- q / 2;;
 
 (* tri_insertion for line*)
 let tri_insertion tab =
@@ -171,6 +171,7 @@ let human_move a = let () = print_string "Vertical:" in
                let () = print_newline () in
                let () = print_string "Horizontal:" in
                let j = read_int () in 
+               new_neighbor i j;
                i, j;;
 
 
