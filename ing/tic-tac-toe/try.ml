@@ -22,7 +22,7 @@ let init_game () =  let () = print_string "Need how many in a line to win?" in
                     let () = print_newline () in
                     w, p, q;;
                 
-let w, p, q = init_game ();;
+let w, p, q = 4, 15, 15;;
 
 let init_board x y =
 	Array.make_matrix x y Non;;
@@ -238,3 +238,126 @@ let gameon black_func white_func =
                print_newline (); 
                move White black_func white_func
     | _     -> print_string "wrong player";;
+
+let hauteur = ref 2;;
+
+let puissance a b =
+    let rec aux c d e = match d with
+        | 0                     -> e
+        | t when t mod 2 = 0    -> aux (c * c) (d / 2) (e)
+        | t                     -> aux (c * c) (d / 2) (e * c)
+    in aux a b 1;;
+        
+let score_max = puissance 10 (w + 2);;
+
+(* evalue_function *)
+let evalue_function x y color=
+	let t = line x y color in match t.(0), t.(1), t.(0) mod 3, t.(1) mod 3 with
+    (* win case *)
+        | a, _, _, _    when a >= w * 3 -> puissance 10 (w + 1)
+    (* live 1 or less *)
+        | a, _, _, _    when a <= 5     -> 0
+    (* dead a/3 dead a/3 *)
+        | a, b, 1, _    when a = b      -> 
+                puissance 10 ((a - 4) / 3) + puissance 5 ((a - 7) / 3)
+    (* dead a/3 live a/3 - 1 *)
+        | a, b, 1, _    when a - b = 2  -> puissance 10 ((a - 4) / 3)
+    (* dead a/3 *)
+        | a, b, 1, _                    -> 
+                puissance 10 ((a - 4) / 3) - puissance 5 ((a - 7) / 3)
+    (* live a/3 live a/3 *)
+        | a, b, 2, 2    when a = b      -> puissance 10 ((a - 2) / 3)
+    (* live a/3 dead a/3 *)
+        | a, b, 2, 1    when a - b = 1  -> 
+                puissance 10 ((a - 2) / 3) - puissance 3 ((a - 5) / 3)
+    (* live a/3 *)
+        | a, _, 2, _                    -> 
+                puissance 10 ((a - 2) / 3) - puissance 5 ((a - 5) / 3)
+        | _, _, _, _                    -> 0;;
+
+(* the score by evalue_function *)
+let score x y color = 
+    evalue_function x y color - evalue_function x y (opponent color);;
+
+
+alpha_beta (-1) (-1) min_int max_int White 2 White;;
+alpha_beta (-1) (-1) min_int max_int Black 2 Black;;
+hauteur := 3;;
+restart ();;
+white_move 7 7;;
+turn White;;
+print_board ();;
+gameon turn turn ;;
+
+let rec alpha_beta i j alpha beta color hauteur original = match hauteur with
+    | 0 -> [(i, j)], score i j original
+    | _ when i <> -1 && j <> -1 && win i j (opponent color) 
+                -> [(i, j)], score i j original
+    | _ ->  let rec aux x y a b acc = match x, y with
+            | t, _  when (t = p || b <= a) && color = original   -> acc, a
+            | t, _  when (t = p || b <= a)                       -> acc, b
+            | _, t  when t = q  -> aux (x + 1) 0 a b acc
+            | _, _  when board.(x).(y) <> Non   -> aux x (y + 1) a b acc
+            | _, _  ->
+                    let () = color_move x y color in
+                    let () = print_int hauteur in
+                    let () = print_char ' ' in
+                    let () = print_int x in
+                    let () = print_char ' ' in
+                    let () = print_int y in
+                    let () = print_char ' ' in
+                    let () = print_int a in
+                    let () = print_char ' ' in
+                    let () = print_int b in
+                    let () = print_newline () in
+                    let cop = 
+                    alpha_beta x y a b (opponent color) (hauteur - 1) original in
+                    let () = take_back x y in
+                    let () = print_int (snd cop) in
+                    let () = print_newline () in
+                    (match color with
+                    | c when c = original && a < snd cop   -> 
+                            aux x (y + 1) (snd cop) b [(x, y)] 
+                    | c when c = original && a = snd cop   ->
+                            aux x (y + 1) a b ((x, y)::acc)
+                    | c when c = original   ->
+                            aux x (y + 1) a b acc
+                    | _ when b > snd cop    ->
+                            aux x (y + 1) a (snd cop) [(x, y)]
+                    | _ when b = snd cop    ->
+                            aux x (y + 1) a b ((x, y)::acc)
+                    | _     ->
+                            aux x (y + 1) a b acc     )
+           in
+           let couple = aux 0 0 alpha beta [] in
+           couple;;
+
+(* AI *)
+let turn color =
+    let i, j = 
+    if (board_free ()) then ((p / 2, q / 2)) else
+        begin
+        let couple = alpha_beta (-1) (-1) min_int max_int color !hauteur color
+        in
+        let a = Random.int (List.length (fst couple)) in
+        let rec aux_final j lis = match j with
+	        | x 	when x = a	-> List.hd lis
+	        | _	    -> aux_final (j + 1) (List.tl lis)
+        in aux_final 0 (fst couple);
+        end
+    in 
+    print_place i j;
+    new_neighbor i j;
+    i, j;;
+
+let score_board = Array.make_matrix p q 0;;
+
+let note color hauteur =
+    for i = 0 to p - 1 do
+        for j = 0 to q - 1 do
+            if board.(i).(j) = Non then
+            score_board.(i).(j) <- 
+                score i j color
+            else score_board.(i).(j) <- 0
+        done
+    done;;
