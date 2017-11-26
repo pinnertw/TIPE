@@ -17,7 +17,7 @@ let score x y color=
 	max (evalue_function x y (opponent color)) ((evalue_function x y color) + 1);;
 
 (* AI *)
-let turn color =
+let lv1 color =
     let rec aux_list i j acc taille max=
         let note = score i j color in match i, j with
 			| t, _	when t = p	-> acc, taille
@@ -46,5 +46,3 @@ let turn color =
         let () = print_char ')' in
         let () = print_newline () in
         i, j;;
-
-gameon human_move turn;;

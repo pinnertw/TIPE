@@ -79,7 +79,7 @@ let rec alpha_beta i j alpha beta color hauteur original = match hauteur with
            couple;;
 
 (* AI *)
-let turn color =
+let lv3 color =
     let i, j = 
     if (board_free ()) then ((p / 2, q / 2)) else
         begin
