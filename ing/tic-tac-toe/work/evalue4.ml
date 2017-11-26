@@ -1,12 +1,22 @@
 open Base;;
-let hauteur = ref 2;;
 
-(* copy *)
-let add = [|10000; 1000; 10; 10000; 1000; 10|];;
-let patterns = [| [|Black; Black; Black; Black; Black|]; [| Non; Black; Black; Black; Black; Non|]; [| Non; Black; Black; Black; Non|]; [|White; White; White; White; White|]; [|Non; White; White; White; White; Non|]; [|Non; White; White; White; Non|] |];;
+let hauteur = ref 1;;
+
+(* Score for patterns *)
+let add = 
+    [|10000; 1000; 10; 10000; 1000; 10|];;
+
+let patterns = 
+    [| [|Black; Black; Black; Black; Black|]; 
+    [| Non; Black; Black; Black; Black; Non|]; 
+    [| Non; Black; Black; Black; Non|]; 
+    [|White; White; White; White; White|]; 
+    [|Non; White; White; White; White; Non|]; 
+    [|Non; White; White; White; Non|] |];;
+
 let positionadd x y = max (p / 2) (q / 2) - max (abs ((p / 2) - x)) (abs ((q / 2) - y));;
 
-let patternmatch x y dirx diry pattern color =
+let patternmatch x y (dirx, diry) pattern color =
     let n = Array.length pattern in 
     let rec aux i j = function
         | m when m = n  -> 1
@@ -23,19 +33,17 @@ let patternmatch x y dirx diry pattern color =
         match color with
         | _ -> try aux x y 0 with index_out_of_bound -> 0;;
 
-let local_score i j col=
-            let somme = ref 0 in
-                for t = 0 to Array.length patterns - 1 do
-                    somme := !somme + patternmatch i j 0 (-1) patterns.(t) col * add.(t);
-                    somme := !somme + patternmatch i j 0 1 patterns.(t) col * add.(t);
-                    somme := !somme + patternmatch i j 1 0 patterns.(t) col * add.(t);
-                    somme := !somme + patternmatch i j 1 (-1) patterns.(t) col * add.(t);
-                    somme := !somme + patternmatch i j 1 1 patterns.(t) col * add.(t);
-                    somme := !somme + patternmatch i j (-1) 1 patterns.(t) col * add.(t);
-                    somme := !somme + patternmatch i j (-1) (-1) patterns.(t) col * add.(t);
-                    somme := !somme + patternmatch i j (-1) 0 patterns.(t) col * add.(t)
-                done;!somme;;
+let dir = [| (-1, -1); (-1, 0); (-1, 1); (0, -1); (0, 1); (1, -1); (1, 0); (1, 1) |];;
 
+let local_score i j col =
+    let n = Array.length patterns in
+    let rec aux score d t= match d with
+        | _ when t = n  -> score
+        | 7 -> 
+            aux (score + patternmatch i j dir.(d) patterns.(t) col * add.(t)) 0 (t + 1)
+        | _ -> 
+            aux (score + patternmatch i j dir.(d) patterns.(t) col * add.(t)) (d + 1) t
+    in aux 0 0 0;;
 
 let note color=
     let rec aux score col x y = match x, y with
@@ -45,7 +53,7 @@ let note color=
         | i, j when board.(i).(j) = col -> 
                 aux (local_score i j col + score + positionadd i j) col i (j + 1)
          | i, j -> aux score col i (j + 1)
-    in aux 0 color 0 0 (*- aux 0 (opponent color) 0 0*);;
+    in aux 0 color 0 0 - aux 0 (opponent color) 0 0;;
 
 
 let rec alpha_beta i j alpha beta color hauteur original = match hauteur with
@@ -78,8 +86,8 @@ let rec alpha_beta i j alpha beta color hauteur original = match hauteur with
            let couple = aux 0 0 alpha beta [] in
            couple;;
 
-(* AI *)
-let turn color =
+(* AI--lv3 *)
+let lv3 color =
     let i, j = 
     if (board_free ()) then ((p / 2, q / 2)) else
         begin
@@ -95,15 +103,4 @@ let turn color =
     print_place i j;
     new_neighbor i j;
     i, j;;
-
-let score_board = Array.make_matrix p q 0;;
-
-let scoreboard color hauteur =
-    for i = 0 to p - 1 do
-        for j = 0 to q - 1 do
-            if board.(i).(j) = Non then
-            score_board.(i).(j) <- 
-                snd (alpha_beta i j min_int max_int color (hauteur - 1) color) 
-            else score_board.(i).(j) <- 0
-        done
-    done;;
+gameon human_move lv3;;
