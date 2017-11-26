@@ -1,35 +1,34 @@
-(* Color and its basic functions *)
+(*------------------------------Preamble-------------------------------*)
+
 type color = Black | White | Non;;
 let opponent color = match color with
     | Black -> White
     | White -> Black
     | _     -> Non;;
 
-(* init Random *)
 Random.init (int_of_float (1000000. *. (Sys.time () )));;
 
-(* need w stones to win *)
+(*-------------------------------Board---------------------------------*)
+
+(* need w stones to win , a p * q board *)
 let init_game () =  let () = print_string "Need how many in a line to win?" in
                     let w = read_int ()in
+                    let () = print_newline () in
+                    let () = print_string "What is the size of the board?" in
                     let () = print_newline () in 
-                    let () = print_string "What is the size of the board?" in 
-                    let () = print_newline () in 
-                    let () = print_string "Vertical:" in 
+                    let () = print_string "Vertical: " in
                     let p = read_int () in
-                    let () = print_newline () in 
-                    let () = print_string "Horizontal:" in
+                    let () = print_newline () in
+                    let () = print_string "Horizontal: " in
                     let q = read_int () in
                     let () = print_newline () in
                     w, p, q;;
-                
+ 
 let w, p, q = init_game ();;
 
-let init_board x y =
-	Array.make_matrix x y Non;;
+let board = Array.make_matrix p q Non;;
 
-let board = init_board p q;;
-
-let board_free () = 
+let board_free () =
     let rec aux i j = match i, j with
         | t, _ when t = p   -> true
         | _, t when t = q   -> aux (i + 1) 0
@@ -37,7 +36,9 @@ let board_free () =
         | _, _  -> false
     in aux 0 0 ;;
 
-(* neighborhood *)
+let in_board x y =
+    0 <= x && 0 <= y && x < p && y < q;;
+
 let neighborhood = [|p / 2; p / 2; q / 2; q / 2|];;
 
 let neighbor i j =
@@ -54,16 +55,22 @@ let new_neighbor i j =
     neighborhood.(2) <- max 0 (min neighborhood.(2) (j - 3));
     neighborhood.(3) <- min q (max neighborhood.(3) (j + 3));;
 
-let print_place i j = 
-    let () = print_char '(' in
-    let () = print_int i in
-    let () = print_string ", " in
-    let () = print_int j in
-    let () = print_char ')' in
-    let () = print_newline () in
-    ();;
+let restart ()=
+	for i = 0 to p-1 do
+		for j = 0 to q-1 do
+			board.(i).(j) <- Non
+        done;
+    done;
+    neighborhood.(0) <- p / 2;
+    neighborhood.(1) <- p / 2;
+    neighborhood.(2) <- q / 2;
+    neighborhood.(3) <- q / 2;;
 
-(* move *)
+(*--------------------------------Move---------------------------------*)
+
+let is_free x y =
+	0 <= x && 0 <= y && x < p && y < q && board.(x).(y) = Non;;
+
 let black_move x y =
 	if board.(x).(y) <> Non
 		then	print_string "not valid" 
@@ -79,44 +86,40 @@ let color_move x y color = match color with
     | White -> white_move x y
     | _     -> print_string "not valid";;
 
-(* take back the stone at (x, y) *)
+let human_move color = 
+    let aux () = 
+        let () = print_string "Vertical: " in
+        let a = read_int () in 
+        let () = print_newline () in
+        let () = print_string "Horizontal: " in
+        let b = read_int () in
+        a, b 
+    in
+    let rec aux2 = function
+        | a, b when is_free a b -> a, b
+        | _, _                  -> aux2 (aux ())
+    in let i, j = aux2 (aux ()) in
+        new_neighbor i j;
+        i, j;;
+
 let take_back x y =
 	board.(x).(y) <- Non;;
 
-(* if (x, y) is in the board*)
-let in_board x y =
-	0 <= x && 0 <= y && x < p && y < q;;
+(*--------------------------------Win----------------------------------*)
 
-(* if (x, y) is free *)
-let is_free x y =
-	0 <= x && 0 <= y && x < p && y < q && board.(x).(y) = Non;;
-
-(* restart the game *)
-let restart ()=
-	for i = 0 to p-1 do
-		for j = 0 to q-1 do
-			board.(i).(j) <- Non
-        done;
-    done;
-    neighborhood.(0) <- p / 2;
-    neighborhood.(1) <- p / 2;
-    neighborhood.(2) <- q / 2;
-    neighborhood.(3) <- q / 2;;
-
-(* tri_insertion for line*)
 let tri_insertion tab =
 	let l = Array.length tab in
 	let rec aux pivot index = match index with
 		| _ when pivot >= l	-> ()
 		| 0	-> aux (pivot + 1) (pivot + 1)
-		| _ when tab.(index) > tab.(index - 1) -> let m = tab.(index) in
-														tab.(index) <- tab.(index - 1);
-														tab.(index - 1) <- m;
-														aux pivot (index - 1)
+		| _ when tab.(index) > tab.(index - 1) -> 
+                let m = tab.(index) in
+					tab.(index) <- tab.(index - 1);
+					tab.(index - 1) <- m;
+    				aux pivot (index - 1)
 		| _	-> aux (pivot + 1) (pivot + 1)
 	in aux 1 1; tab;;
 
-(* find the the numbers of these line with certain color *)
 let line x y color =
    let rec aux pair func acc = match fst pair, snd pair with
       | a, b when in_board a b && board.(a).(b) = color -> aux (func (a, b)) func (acc + 3)
@@ -144,11 +147,11 @@ let line x y color =
 		+ 3
          in tri_insertion [|aux2 num1; aux2 num2; aux2 num3; aux2 num4|];;
 
-(* win *)
 let win x y color =
 	(line x y color).(0)>= 3 * w;;
 
-(* print board *)
+(*-------------------------------Print---------------------------------*)
+
 let print_board () =
     let rec aux i j = match i, j with
         | t, _  when t = p  -> ()
@@ -175,16 +178,24 @@ let print_board () =
                                aux i (j + 1)
     in aux (-1) (-1); print_newline ();;
 
-let human_move a = let () = print_string "Vertical:" in
-               let i = read_int () in 
-               let () = print_newline () in
-               let () = print_string "Horizontal:" in
-               let j = read_int () in 
-               new_neighbor i j;
-               i, j;;
+let print_place i j =
+    let () = print_char '(' in
+    let () = print_int i in
+    let () = print_string ", " in
+    let () = print_int j in
+    let () = print_char ')' in
+    let () = print_newline () in
+    ();;
 
+(*------------------------------Game-on--------------------------------*)
 
-(* game black_func V.S. white_func *)
+let instruction () =
+    let () = print_board () in
+    let () = print_int w in
+    let () = print_string " in a line to win!" in
+    let () = print_newline () in
+    print_newline ();;
+
 let rec move aqui black_func white_func = match aqui with 
     | White -> let i, j = white_func White in 
         (match board.(i).(j) with 
@@ -221,12 +232,6 @@ let rec move aqui black_func white_func = match aqui with
                                         print_newline (); 
                                         move Black black_func white_func )
     | _     -> print_string "wrong player";;
-
-let instruction () =
-    print_board ();
-    print_int w;
-    print_string " in a line to win!";
-    print_newline ();;
 
 let gameon black_func white_func = 
     instruction (); 
