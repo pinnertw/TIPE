@@ -1,0 +1,54 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[]{hyperref}
+\begin{document}
+\center{\huge \bfseries Morpion}
+\flushleft
+\section*{\bfseries Positionnement thématique}
+
+\hspace*{7mm}\textit{Informatique Pratique: Intelligence artificielle.}
+
+\section*{\bfseries Mots-clés}
+
+\begin{tabular}{l l}
+    {\bfseries Mots-clés} (en français) & {\bfseries Mots-clés} (en anglais)\\
+    \textit{Morpion}& \textit{Tic-tac-toe}\\
+    \textit{Intelligence artificielle} & \textit{Artificial Intelligence}\\
+    \textit{Glouton} & \textit{Greedy}\\
+    \textit{Minimax} & \textit{Minimax}\\
+    \textit{Élagage alpha-beta} & \textit{Alpha-beta prunning}
+\end{tabular}
+
+\section*{\bfseries Bibliographie commentée}
+
+\hspace*{7mm}Le morpion est un jeu de grille. Sur une grille de taille $m \times n$, le premier joueur place un pion noir, le second joueur place un pion blanc et ainsi de suite. Le but est d'aligner k pions de même couleur.\\
+\hspace*{7mm}Afin d'étudier le morpion, nous considérons le jeu comme un \textit{(m, n, k)-jeu} où $m\times n$ est la taille de la grille et k est le nombre de pions dans une ligne pour gagner. Avec l'argument de «voler la stratégie de l'adversaire», ce jeu a pour résultat soit le premier joueur gagne, soit aucun de ces deux joueurs ne gagne\cite{steal}. Le (m, n, k)-jeu pour $k\ge 8$ est montré d'être un jeu à égalité\cite{9-win, 8-win}. Quitte à forcer le second joueur à jouer une certaine place, la méthode de «Recherche de l'espace menaçant» (Threat space search) nous montre que le premier joueur gagne dans le (15, 15, 5)-jeu.\cite{Threat} Le (m, n, 6)-jeu et le (m, n, 7)-jeu restent encore indéterminés\cite{67-win}. La théorie des jeux nous donne un algorithme(minimax) pour chercher une stratégie assimilé à la meilleure stratégie\cite{minimax}. Et avec l'élagage alpha-beta, nous avons une fonction assez puissante pour les joueurs\cite{alpha-beta}.  
+\newpage 
+
+\section*{\bfseries Problématique retenue}
+\hspace*{7mm}Les (m, n, 6)-jeu et les (m, n, 7)-jeu n'ont pas encore un résultat global. Nous pensons donc naturellement à chercher la solution de (m, n, 5) et puis l'étendre au cas de 6 et de 7. Comment chercher une fonction heursistique pour le jeu (m, n, 5) et comment généraliser aux cas de (m, n, 6)-jeu?
+\section*{\bfseries Objectifs du TIPE}
+\hspace*{7mm}Nous pouvons prouver le cas de (15, 15, 5)-jeu avec la méthode de «Recherche de l'espace menaçant», qui nous donne aussi une solution précise du (15, 15, 5)-jeu. J'essaie d'abord de donner des notes à des points sur la grille. Cependant, la fonction ne considère pas l'état suivant et n'est donc pas assez intelligent. Ainsi, j'ai réalisé une autre fonction avec l'algorithme de minimax afin d'améliorer la fonction précédente. Enfin, je considère le cas (m, n, 6)-jeu où m, n sont petits. 
+\section*{\bfseries Références bibliographiques}
+\begingroup
+\renewcommand{\section}[2]{}%
+\begin{thebibliography}{10}
+\bibitem{steal}
+    Uiterwijk, J.W.H.M., Herik, H.J. van den., The advantage of the initiative, Information Sciences, 122 (2000) 43-58.
+\bibitem{9-win}
+    Hales, A.W., Jewett, R.I. (1963). Regularity and positional games. Transactions of the American Mathematical Society 106 222-229.
+\bibitem{8-win}
+    Zetters, T.G.L. Problem S.10 proposed by R.K.Guy and J.L. Selfridge, The American Mathematical Monthly 86 (1979), solution 87 575-576.
+\bibitem{Threat}
+    Allis, L. V. (1994) Searching for solutions in games and artificial intelligence, Ph.D. Thesis. University of Limburg, Maastricht.
+\bibitem{67-win}
+    \url{http://www.weijima.com/index.php?option=com_content&view=article&id=11}
+\bibitem{minimax}
+    Guillermo Owen, (1967) Communications to the Editor-An Elementary Proof of the Minimax Theorem. Management Science 13(9):765-765
+\bibitem{alpha-beta}
+    Stuart Russell, Peter Norvig. Artificial Intelligence-A Modern Approach Prentice Hall (2010) 167-171
+\end{thebibliography}
+\endgroup
+\end{document}

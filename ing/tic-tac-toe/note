@@ -2,13 +2,14 @@
 jeux non coopératifs, séquentiel, finis, à somme nulle, à information parfaite
 
 # Wiki
-John Von Neumann: Théorie de minimax
-Théorie des jeux combinatoires
-Equilibre de Nash parfait en sous-jeux
 
 # Reference
 L'algorithme de Zermelo
 Théorie des Juex: Introduction à la théorie des Juex répétés. Nicole Berline, Alain Plagne, Claude Sabbah. Les éditions de école polytechnique. 
+
+1. Gloutone: fonction heuristique, bien défini -> bon
+2. Minimax:  approcher
+3. Equilibre de Nash:   
 
 # Syntaxe
 make_matrix -> Array.make_matrix
