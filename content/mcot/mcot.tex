@@ -3,6 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[]{hyperref}
+\usepackage{ragged2e}
 \begin{document}
 \center{\huge \bfseries Morpion}
 \flushleft
@@ -22,15 +23,19 @@
 \end{tabular}
 
 \section*{\bfseries Bibliographie commentée}
-
-\hspace*{7mm}Le morpion est un jeu de grille. Sur une grille de taille $m \times n$, le premier joueur place un pion noir, le second joueur place un pion blanc et ainsi de suite. Le but est d'aligner k pions de même couleur.\\
-\hspace*{7mm}Afin d'étudier le morpion, nous considérons le jeu comme un \textit{(m, n, k)-jeu} où $m\times n$ est la taille de la grille et k est le nombre de pions dans une ligne pour gagner. Avec l'argument de «voler la stratégie de l'adversaire», ce jeu a pour résultat soit le premier joueur gagne, soit aucun de ces deux joueurs ne gagne\cite{steal}. Le (m, n, k)-jeu pour $k\ge 8$ est montré d'être un jeu à égalité\cite{9-win, 8-win}. Quitte à forcer le second joueur à jouer une certaine place, la méthode de «Recherche de l'espace menaçant» (Threat space search) nous montre que le premier joueur gagne dans le (15, 15, 5)-jeu.\cite{Threat} Le (m, n, 6)-jeu et le (m, n, 7)-jeu restent encore indéterminés\cite{67-win}. La théorie des jeux nous donne un algorithme(minimax) pour chercher une stratégie assimilé à la meilleure stratégie\cite{minimax}. Et avec l'élagage alpha-beta, nous avons une fonction assez puissante pour les joueurs\cite{alpha-beta}.  
-\newpage 
+\justify
+\hspace*{7mm}Tic-tac-toe est un jeu classique dans lequel l'objectif est d'aligner 3 circles (ou 3 croix) sur une grille de taiile $3 \times 3$. Le morpion est un jeu généralisé. Sur une grille de taille $m \times n$, le premier joueur place un pion noir, le second joueur place un pion blanc et ainsi de suite. Le but est d'aligner $k$ pions de même couleur.\\
+\hspace*{7mm}Afin d'étudier le morpion, nous considérons le jeu comme un (m, n, k)-jeu où $m\times n$ est la taille de la grille et $k$ est le nombre de pions dans une ligne pour gagner. Avec l'argument de « voler la stratégie de l'adversaire » établie par Uiterwijk et Henrik \cite{steal}, soit il existe une stratégie gagnante pour le premier joueur, soit une stratégie qui dans le pire des cas mène au match nul. Le (m, n, k)-jeu pour $k\ge 8$ est montré d'être un jeu à égalité \cite{9-win, 8-win}. Quitte à forcer le second joueur à jouer une certaine place, la méthode Threat space search, détaillé par Allis \cite{Threat}, montre qu'il existe une stratégie gagnante dans le (15, 15, 5)-jeu. Le (m, n, 6)-jeu et le (m, n, 7)-jeu restent encore indéterminés \cite{67-win}. La théorie des jeux nous donne un algorithme(minimax)\cite{minimax} pour chercher une stratégie assimilé à la meilleure stratégie. En fin, avec l'élagage alpha-beta \cite{alpha-beta}, nous pouvons améliorer l'algorithme minimax en efficacité.
 
 \section*{\bfseries Problématique retenue}
-\hspace*{7mm}Les (m, n, 6)-jeu et les (m, n, 7)-jeu n'ont pas encore un résultat global. Nous pensons donc naturellement à chercher la solution de (m, n, 5) et puis l'étendre au cas de 6 et de 7. Comment chercher une fonction heursistique pour le jeu (m, n, 5) et comment généraliser aux cas de (m, n, 6)-jeu?
+\justify
+\hspace*{7mm}Nous ignorons encore s'il existe des stratégies gagnantes ou non pour les \mbox{(m, n, 6)-jeu} et \mbox{(m, n, 7)-jeu}. Nous pensons donc naturellement à chercher la solution de (m, n, 5) et puis l'étendre au cas de 6 et de 7. 
 \section*{\bfseries Objectifs du TIPE}
-\hspace*{7mm}Nous pouvons prouver le cas de (15, 15, 5)-jeu avec la méthode de «Recherche de l'espace menaçant», qui nous donne aussi une solution précise du (15, 15, 5)-jeu. J'essaie d'abord de donner des notes à des points sur la grille. Cependant, la fonction ne considère pas l'état suivant et n'est donc pas assez intelligent. Ainsi, j'ai réalisé une autre fonction avec l'algorithme de minimax afin d'améliorer la fonction précédente. Enfin, je considère le cas (m, n, 6)-jeu où m, n sont petits. 
+\begin{enumerate}
+    \item Chercher une stratégie sous la forme d'une fonction qui a l'état de la grille comme entrée et renvoye une place comme sortie, avec laquelle le premier joueur peut toujours gagner dans le (15, 15, 5)-jeu.
+    \item Améliorer la stratégie avec l'algorithme de minimax puis avec l'élagage alpha-beta.
+    \item Essayer de résoudre le (m, n, 6)-jeu avec notre algorithme.
+\end{enumerate}
 \section*{\bfseries Références bibliographiques}
 \begingroup
 \renewcommand{\section}[2]{}%
