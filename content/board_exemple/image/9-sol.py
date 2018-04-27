@@ -64,7 +64,7 @@ for i in range(-taille, taille):
         up(8 + 8*i, 8*j - 4*i - 3)
 
 plt.plot([2, 2], [1, 9], color='red', linewidth=20 / ratio / 2)
-plt.plot([5, 14], [3, 12], color='red', linewidth=20 / ratio / 2)
+plt.plot([5, 13], [3, 11], color='red', linewidth=20 / ratio / 2)
 
 # Save image
 fig.savefig('m-n-9.eps', dpi=100)
