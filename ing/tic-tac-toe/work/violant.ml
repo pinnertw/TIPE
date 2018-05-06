@@ -43,4 +43,17 @@ let candidat color =
     aux 0 0;
     candidats;;
 
+let rec cherche color voisin =
+    let rec aux1 neigh i j = match i, j with
+        | (neigh.(
+        | _, _  -> 
+    in
+    let candi = candidat Black in
+    let rec aux2 rang = match rang with
+        | _ when rang = width   -> true
+        | _ -> 
+    in match color with
+    | White -> aux1 voisin (voisin.(0)) (voisin.(1))
+    | Black -> aux2 0;;
+
 black_move (p / 2) (q / 2);;
