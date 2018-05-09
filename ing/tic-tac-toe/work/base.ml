@@ -43,17 +43,17 @@ let neighborhood = [|p / 2; p / 2; q / 2; q / 2|];;
 
 let neighbor i j =
     let new_neighborhood = Array.make 4 0 in
-        new_neighborhood.(0) <- max 0 (min neighborhood.(0) (i - 3));
-        new_neighborhood.(1) <- min p (max neighborhood.(1) (i + 3));
-        new_neighborhood.(2) <- max 0 (min neighborhood.(2) (j - 3));
-        new_neighborhood.(3) <- min q (max neighborhood.(3) (j + 3));
+        new_neighborhood.(0) <- max 0 (min neighborhood.(0) (i - 2));
+        new_neighborhood.(1) <- min p (max neighborhood.(1) (i + 2));
+        new_neighborhood.(2) <- max 0 (min neighborhood.(2) (j - 2));
+        new_neighborhood.(3) <- min q (max neighborhood.(3) (j + 2));
         new_neighborhood;;
 
 let new_neighbor i j =
-    neighborhood.(0) <- max 0 (min neighborhood.(0) (i - 3));
-    neighborhood.(1) <- min p (max neighborhood.(1) (i + 3));
-    neighborhood.(2) <- max 0 (min neighborhood.(2) (j - 3));
-    neighborhood.(3) <- min q (max neighborhood.(3) (j + 3));;
+    neighborhood.(0) <- max 0 (min neighborhood.(0) (i - 2));
+    neighborhood.(1) <- min p (max neighborhood.(1) (i + 2));
+    neighborhood.(2) <- max 0 (min neighborhood.(2) (j - 2));
+    neighborhood.(3) <- min q (max neighborhood.(3) (j + 2));;
 
 let restart ()=
 	for i = 0 to p-1 do

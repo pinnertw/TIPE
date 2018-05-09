@@ -43,31 +43,50 @@ let candidat color =
     aux 0 0;
     candidats;;
 
-let rec cherche color voisin place =
+let print_bool boo = if boo then print_string "true" else print_string "false";;
+
+let is_full () =
+    let boo = ref true in
+    for i = 0 to p do
+        for j = 0 to q do
+            boo := !boo && (board.(i).(j) <> Non)
+        done;
+    done; !boo;;
+
+let rec cherche color voisin =
     let rec aux1 neigh i j = match i, j with
+    (* Parcours *)
         | t, _ when t = neigh.(1)   -> true
         | _, t when t = neigh.(3)   -> aux1 neigh (i + 1) (neigh.(2))
         | _, _ when board.(i).(j) <> Non -> aux1 neigh i (j + 1)
-        | _, _ when win i j White   -> white_move i j; print_board (); take_back i j; false
+    (* white win -> false *)
+        | _, _ when win i j White   -> false
+    (* white doesn't win -> Black's turn *)
         | _, _  -> white_move i j;
-                   let resultat = cherche Black (neighbor i j) (place + 1) in
+                   let resultat = cherche Black (neighbor i j) in
                    take_back i j;
                    resultat && aux1 neigh i (j + 1)
     in
     let candi = candidat Black in
     let rec aux2 rang = match rang with
-        | _ when rang = width   -> true
-        | _ when candi.(rang).(2) = -1  -> aux2 (rang + 1)
+    (* Parcours des Candidats: fini -> Black a une façon pour gagner*)
+        | _ when rang = width   -> false
+        | _ when candi.(rang).(2) = -1 && rang = 0  -> false
+        | _ when candi.(rang).(2) = -1 -> false
+    (* Black win -> true *)
         | _ when win (candi.(rang).(0)) (candi.(rang).(1)) Black    -> true
+    (* Black doesn't win -> White's turn *)
         | _ -> black_move (candi.(rang).(0)) (candi.(rang).(1));
-               let cher = cherche White (neighbor candi.(rang).(0) (candi.(rang).(1))) (place + 1) in
-               take_back (candi.(rang).(0)) (candi.(rang).(1)); cher || aux2 (rang + 1)
-    in match color with
-    | _ when place = p * q  -> print_board (); false
+               let cher = cherche White (neighbor candi.(rang).(0) (candi.(rang).(1))) in
+               take_back (candi.(rang).(0)) (candi.(rang).(1));
+               cher || aux2 (rang + 1)
+    in 
+    match color with
     | White -> aux1 voisin (voisin.(0)) (voisin.(2))
     | Black -> aux2 0
     | _     -> failwith "Error";;
 
 black_move (p / 2) (q / 2);;
 new_neighbor (p / 2) (q / 2);;
-let resultat = cherche White neighborhood 1;;
+let resultat = cherche White neighborhood;;
+print_bool resultat;;
