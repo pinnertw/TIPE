@@ -26,7 +26,7 @@ let score x y color=
 	max (evalue_function x y (opponent color)) ((evalue_function x y color) + 1);;
 
 let width = 10;;
-(* AI *)
+(* cherche *)
 let candidat color =
     let candidats = Array.make_matrix width 3 (-1) in
     let rec insert elem num = match num with
@@ -43,14 +43,14 @@ let candidat color =
     aux 0 0;
     candidats;;
 
-let rec cherche color voisin =
+let rec cherche color voisin place =
     let rec aux1 neigh i j = match i, j with
         | t, _ when t = neigh.(1)   -> true
         | _, t when t = neigh.(3)   -> aux1 neigh (i + 1) (neigh.(2))
-        | _, _ when board.(i).(j) = Black || board.(i).(j) = White  -> aux1 neigh i (j + 1)
-        | _, _ when win i j White   -> false
+        | _, _ when board.(i).(j) <> Non -> aux1 neigh i (j + 1)
+        | _, _ when win i j White   -> white_move i j; print_board (); take_back i j; false
         | _, _  -> white_move i j;
-                   let resultat = cherche Black (neighbor i j) in
+                   let resultat = cherche Black (neighbor i j) (place + 1) in
                    take_back i j;
                    resultat && aux1 neigh i (j + 1)
     in
@@ -60,12 +60,14 @@ let rec cherche color voisin =
         | _ when candi.(rang).(2) = -1  -> aux2 (rang + 1)
         | _ when win (candi.(rang).(0)) (candi.(rang).(1)) Black    -> true
         | _ -> black_move (candi.(rang).(0)) (candi.(rang).(1));
-               cherche White (neighbor candi.(rang).(0) (candi.(rang).(1))) && aux2 (rang + 1)
+               let cher = cherche White (neighbor candi.(rang).(0) (candi.(rang).(1))) (place + 1) in
+               take_back (candi.(rang).(0)) (candi.(rang).(1)); cher || aux2 (rang + 1)
     in match color with
+    | _ when place = p * q  -> print_board (); false
     | White -> aux1 voisin (voisin.(0)) (voisin.(2))
     | Black -> aux2 0
     | _     -> failwith "Error";;
 
 black_move (p / 2) (q / 2);;
 new_neighbor (p / 2) (q / 2);;
-let resultat = cherche White neighborhood;;
+let resultat = cherche White neighborhood 1;;
