@@ -88,5 +88,7 @@ let rec cherche color voisin =
 
 black_move (p / 2) (q / 2);;
 new_neighbor (p / 2) (q / 2);;
-let resultat = cherche White neighborhood;;
+white_move (p / 2 - 1) (q / 2 - 1);;
+new_neighbor (p / 2 - 1) (q / 2 - 1);;
+let resultat = cherche Black neighborhood;;
 print_bool resultat;;
