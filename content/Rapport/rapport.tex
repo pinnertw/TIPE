@@ -1,6 +1,7 @@
 \documentclass[12pt, a4paper]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{wrapfig}
@@ -19,6 +20,23 @@ Morpion}
 \subsection*{La règle du morpion}
 Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chaqu'un prend un symbole et on dessine au tour par tour son symbole sur la grille. Le but est d'aligner 5 symboles verticalement, horizontalement ou en diagonale pour gagner.
 Dans le cas généralisé, nous appelons (m, n, k)-jeu où la taille de la grille est $m \times n$ et il faut $k$ symboles dans une ligne pour gagner.
-\subsection*{    
+\subsection*{Méthode}
+Il existe deux méthodes pour déterminer s'il existe une telle stratégie:
+\begin{itemize}
+    \item On cherche tous les cas possibles.
+    \item On apparie les points de la grille. Si le deuxième joueur peut toujours prévenir la réussite du premier joueur en jouant le pairage, alors il n'y a pas d'une telle stratégie.
+\end{itemize}
+Dans le cas où k$\le$7, on utilise la première méthode.
+%% introduce determine tree
+Or, la complexité de chercher tous les cas possibles est en O($3^{m \times n}$). Ainsi, on utilise une fonction gloutonne pour chercher le cas le \og plus \fg possible. Par exemple, pour la grille ci-dessous, on donne à chaque point une note. 
+%% introduce our function
+Le point est plus possible si sa note est plus élevée.
+
+%% alpha-beta
+
+%% the second method
+
+%% result
+
 
 \end{document}
