@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 # preambule
-taille = 20
+taille = 15
 ratio = 5
 fig = plt.figure(figsize=(taille / ratio, taille / ratio))
 plt.subplots_adjust(bottom=0, top=1, left=0, right=1, hspace=0.2, wspace=0.2)
