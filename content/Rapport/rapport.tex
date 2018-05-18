@@ -38,8 +38,7 @@ Dans le cas où k $\le$ 7, on utilise la première méthode avec l'arbre de déc
 \caption{Arbre de décision (le cercle noir est le symbole du premier joueur)} \label{fig:arbre}
 \end{figure}
 
-Or, la complexité de chercher tous les cas possibles est en O(($m \times n$)!). Ainsi, on utilise une fonction gloutonne pour chercher le cas le \og plus \fg possible. Avec cette fonction, on donne une note à chaque point. Si un point est plus possible pour gagner, alors sa note est plus élevée.
-\\
+Or, la complexité de chercher tous les cas possibles est en O(($m \times n$)!). Ainsi, on utilise une fonction gloutonne pour chercher le cas le \og plus \fg possible. Avec cette fonction, on donne une note à chaque point. Si un point est plus possible pour gagner, alors sa note est plus élevée.\par
 On utilise la deuxième méthode lorsque k > 7.
 
 \section{Exploitation}
@@ -64,8 +63,7 @@ Il y a deux cas possibles, qu'on appelle i-vivre ou i-mort où i est le nombre d
     \white{c5}
     \shortstack{\showgoban\\La note est nulle}
 \end{center}
-Dans notre fonction, on donne $3^{i}$ au cas de i-vivre et $3^{i-1}$ au celui de i-mort car j-mort est en effet le cas de (j$+$1)-vivre. En particulier, on donne $3^{k+1}$ au cas où le premier joueur est sûrement gagné, c'est-à-dire k-mort ou (k-1)-vivre.\\
-En même temps, il faut considérer les quatre directions. Par exemple (Exemple 2), si k $=$ 5, le cas 4-mort-4-mort est un cas gagnant (le deuxième joueur ne peut que prévenir la réussite d'une direction, les deux x).
+Dans notre fonction, on donne $3^{i}$ au cas de i-vivre et $3^{i-1}$ au celui de i-mort car j-mort est en effet le cas de (j$+$1)-vivre. En particulier, on donne $3^{k+1}$ au cas où le premier joueur est sûrement gagné, c'est-à-dire k-mort ou (k-1)-vivre. En même temps, il faut considérer les quatre directions. Par exemple (Exemple 2), si k $=$ 5, le cas 4-mort-4-mort est un cas gagnant (le deuxième joueur ne peut que prévenir la réussite d'une direction, les deux x).
 \cleargoban
 \begin{center}
     \black{d5,e5,f5,g3,g4,g6}
@@ -83,21 +81,27 @@ Dans notre fonction, on ne considère que l'état de la grille, et elle n'est pa
     \gobansize{5}
     \black[1]{c3}
     \white[2]{b4}
-    \shortstack{\showfullgoban\\Exemple 3.1}
+    \shortstack{\showfullgoban\\1}
     \cleargoban
     \black{c3}
     \white{b4}
     \white[\igotriangle]{b3,b2,c2,c4,d3,d4}
-    \shortstack{\showfullgoban\\3.2}
+    \shortstack{\showfullgoban\\2}
     \cleargoban
-    \black{c3,c4}
+    \black{c3,d3}
     \white{b4}
-    \white[\igotriangle]{c5}
-    \shortstack{\showfullgoban\\3.3}
+    \white[\igotriangle]{b3}
+    \shortstack{\showfullgoban\\3}
+    \\
+    Exemple 3
 \end{center}
-Ainsi, on utilise l'arbre de décision pour améliorer notre fonction, de sorte que notre fonction \og pense\fg \ à l'étape d'après. Pour le faire, on utilise l'algorithme de l'élagage alpha-beta. Dans cet algorithme, on utilise notre fonction naïve et la note est calculée par la difference de celle du premier joueur et celle du deuxième joueur. Ainsi, dans le niveau du premier joueur, on veux que la note soit plus élevée tandis que la note est plus faible dans le niveau du deuxième joueur.
+\par
+On utilise l'arbre de décision pour améliorer notre fonction, de sorte que notre fonction \og pense\fg \ à l'étape d'après. Pour le faire, on utilise l'algorithme de minimax. Dans cet algorithme, on utilise notre fonction naïve et la note est calculée par la difference de celle du premier joueur et celle du deuxième joueur. Cette note peut être eventuellement négative. Ainsi, dans le niveau du premier joueur (niveau max), on veux que la note soit plus élevée tandis que la note est plus faible dans le niveau du deuxième joueur (niveau min).\par
 %alpha-beta
-
+Dans l'arbre de décision, on donne la note de la position si c'est une feuille. Lorsqu'on est dans un nœud du niveau max (resp. min), on compare les notes de ses fils et en choisit la plus grande (resp. petite). En pratique, on se donne une hauteur et on fait un parcours en profondeur.\par
+On peut encore améliorer cet algorithme en utilisant l'algorithme de l'élagage alpha-beta. Dans l'algorithme de minimax, on peut couper les arêtes dans certains cas. Par exemple, dans le niveau max, on a déjà déterminé la note d'un nœud 81. Or dans le nœud A, sa note est donnée par le minimum du niveau prochain. Ainsi, dans le niveau prochain, on peut s'arrêter dès qu'on a une note inférieure à 81.
+On appelle $\alpha$-coupure (resp. $\beta$-coupure) lorsqu'on est dans le niveau max (resp. niveau min) et une des notes des fils d'un nœud est inférieure (resp. supérieure) à celle de son frère.\par
+On utilise la fonction améliorée et cherche la stratégie gagnante du premier joueur.
 
 \subsection{k $\ge$ 8}
 En effet, si on peut montrer que le premier joueur n'a pas de stratégie gagnante lorsque k = 8, alors le premier joueur n'en a pas pour tout k $\ge$ 8 car la même stratégie du deuxième joueur parvient le premier à aligner 8 symboles. On donne notamment le pairage du cas k = 9 \mbox{(figure. \ref{fig:m-n-9})} car il est plus intuitif.
@@ -126,7 +130,7 @@ Il y a trois façons de gagner ce sous-jeu \mbox{(figure. \ref{fig:regle}):}
     \includegraphics{8-rules1.eps}
     \includegraphics{8-rules2.eps}
     \includegraphics{8-rules3.eps}
-    \caption{Les trois façons pour gagner dans le sous-jeu.}
+    \caption{Les trois façons pour gagner le sous-jeu.}
     \label{fig:regle}
 \end{figure}
 Ainsi, puisque le premièr joueur ne peut jamais gagner ce sous-jeu, il ne peut pas non plus gagner le (m, n, 8)-jeu. (figure. \ref{fig:m-n-8})
