@@ -6,9 +6,11 @@
 \usepackage{graphicx}
 \usepackage{wrapfig}
 \usepackage{indentfirst}
+\usepackage{tikz}
 \usepackage{igo}
 
 \graphicspath{{/home/pgi/TIPE/content/Rapport/image/}}
+\usetikzlibrary{trees}
 
 % Title
 \title{Rapport de TIPE\\
@@ -34,7 +36,41 @@ Dans le cas où k $\le$ 7, on utilise la première méthode avec l'arbre de déc
 
 \begin{figure}[t]
 \centering
-\includegraphics[height=6cm]{arbre.eps}
+\gobansize{3}
+\black{b2}
+\copytogoban{2}
+\white{a3}
+\copytogoban{3}
+\clear{a3}
+\white{a2}
+\copytogoban{4}
+\cleargoban
+\black{a2}
+\copytogoban{5}
+\clear{a2}
+\black{a3}
+\copytogoban{6}
+\clear{a3}
+
+\begin{tikzpicture}[level distance=2cm,
+    level 1/.style={sibling distance=4cm},
+level 2/.style={sibling distance=1.5cm}]
+  \node {\showfullgoban}
+  child {node {\usegoban{2} \showfullgoban}
+      child {node {\usegoban{3} \showfullgoban}
+      child {node {$\vdots$}}}
+      child {node {\usegoban{4} \showfullgoban}
+      child {node {$\vdots$}}}
+    }
+    child {node {\usegoban{5} \showfullgoban}
+        child {node {$\vdots$}}
+        child {node {$\vdots$}}
+    }
+    child {node {\usegoban{6} \showfullgoban}
+        child {node {$\vdots$}}
+        child {node {$\vdots$}}
+    };
+\end{tikzpicture}
 \caption{Arbre de décision (le cercle noir est le symbole du premier joueur)} \label{fig:arbre}
 \end{figure}
 
