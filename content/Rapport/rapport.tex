@@ -33,7 +33,7 @@ Il existe deux méthodes pour déterminer s'il existe une telle stratégie:
     \item On apparie les points de la grille. Si le deuxième joueur peut toujours prévenir la réussite du premier joueur en jouant le pairage, alors il n'y a pas d'une telle stratégie.
 \end{itemize}
 
-Dans le cas où k $\le$ 7, on utilise la première méthode avec l'arbre de décision. Chaque nœud de cet arbre est un état de la grille. Par exemple (figure. \ref{fig:arbre}) , la racine de cet arbre est la grille sans symbole. Ensuite, les fils de chaque nœud sont les états de la grille où on place un symbole de plus au dessus. Enfin, les feuilles sont les cas où un des joueurs a gagné ou où personne n'a gagné (c'est-à-dire que la grille a été remplie et que aucun joueur a aligné k symboles).
+Dans le cas où k $\le$ 7, on utilise la première méthode avec l'arbre de décision. Chaque nœud de cet arbre est un état de la grille. Par exemple (Figure. \ref{fig:arbre}) , la racine de cet arbre est la grille sans symbole. Ensuite, les fils de chaque nœud sont les états de la grille où on place un symbole de plus au dessus. Enfin, les feuilles sont les cas où un des joueurs a gagné ou où personne n'a gagné (c'est-à-dire que la grille a été remplie et que aucun joueur a aligné k symboles).
 
 \begin{figure}[t]
 \centering
@@ -169,6 +169,8 @@ level 3/.style={sibling distance=1.5cm}]
 %alpha-beta
 Dans l'arbre de décision, on donne la note de la position si c'est une feuille. Lorsqu'on est dans un nœud du niveau max (resp. min), on compare les notes de ses fils et en choisit la plus grande (resp. petite). En pratique, on se donne une hauteur et on fait un parcours en profondeur.\par
 On peut encore améliorer cet algorithme en utilisant l'algorithme de l'élagage alpha-beta. Dans l'algorithme de minimax, on peut couper les arêtes dans certains cas. Par exemple, dans le niveau max, on a déjà déterminé la note d'un nœud 81. Or dans le nœud A, sa note est donnée par le minimum du niveau prochain. Ainsi, dans le niveau prochain, on peut s'arrêter dès qu'on a une note inférieure à 81. On appelle coupure alpha (resp. coupure beta) lorsqu'on est dans le niveau max (resp. niveau min) et une des notes des fils d'un nœud est inférieure (resp. supérieure) à celle de son frère.
+\begin{center}
+    
 \begin{tikzpicture}
 %%alpha
     \node[point] (n0){\ }
@@ -180,7 +182,7 @@ On peut encore améliorer cet algorithme en utilisant l'algorithme de l'élagage
     ;
     \node[right of=n1,node distance=2cm] {max};
     \node[right of=n3,node distance=1.3cm] {min};
-    \node[below of=n2] {Coupure alpha};
+    \node[below of=n2,node distance=0.5cm] {Coupure alpha};
     \draw[-] (n3) to node{X} (n1);
     \draw[-] (n1) to node{X} (n0);
 %%beta
@@ -193,32 +195,33 @@ On peut encore améliorer cet algorithme en utilisant l'algorithme de l'élagage
     ;
     \node[right of=n4,node distance=2cm] {min};
     \node[right of=n6,node distance=1.3cm] {max};
-    \node[below of=n5] {Coupure beta};
+    \node[below of=n5,node distance=0.5cm] {Coupure beta};
     \draw[-] (n6) to node{X} (n4);
     \draw[-] (n4) to node{X} (n);
 
 
 \end{tikzpicture}
+\end{center}
 
 On utilise la fonction améliorée pour chercher la stratégie gagnante du premier joueur.
 
 \subsection{k $\ge$ 8}
-En effet, si on peut montrer que le premier joueur n'a pas de stratégie gagnante lorsque k = 8, alors le premier joueur n'en a pas pour tout k $\ge$ 8 car la même stratégie du deuxième joueur parvient le premier à aligner 8 symboles. On donne notamment le pairage du cas k = 9 \mbox{(figure. \ref{fig:m-n-9})} car il est plus intuitif.
+En effet, si on peut montrer que le premier joueur n'a pas de stratégie gagnante lorsque k = 8, alors le premier joueur n'en a pas pour tout k $\ge$ 8 car la même stratégie du deuxième joueur parvient le premier à aligner 8 symboles. On donne notamment le pairage du cas k = 9 \mbox{(Figure. \ref{fig:m-n-9})} car il est plus intuitif.
 \begin{figure}[h!]
     \centering
     \includegraphics{m-n-9.eps}
     \caption{(m, n, 9)-jeu}
     \label{fig:m-n-9}
 \end{figure}
-On voit que si le deuxième joueur suit le pairage, alors le premier joueur ne peut jamais réussir (les lignes rouges).\\
-Lorsque k = 8, on divise le jeu en des sous-jeux. Ces sous-jeux se jouent sur la grille de la forme comme \mbox{figure. \ref{fig:sous-jeu}.}
+On voit que si le deuxième joueur suit le pairage, alors le premier joueur ne peut jamais réussir (les lignes rouges).\newpage
+Lorsque k = 8, on divise le jeu en des sous-jeux. Ces sous-jeux se jouent sur la grille de la forme comme \mbox{Figure. \ref{fig:sous-jeu}.}
 \begin{figure}[h!]
     \centering
     \includegraphics{m-n-8-little.eps}
     \caption{La grille du sous-jeu}
     \label{fig:sous-jeu}
 \end{figure}
-Il y a trois façons de gagner ce sous-jeu \mbox{(figure. \ref{fig:regle}):}
+Il y a trois façons de gagner ce sous-jeu \mbox{(Figure. \ref{fig:regle}):}
 \begin{itemize}
     \item Aligner trois symboles en diagonale.
     \item Aligner verticalement deux symboles.
@@ -232,7 +235,7 @@ Il y a trois façons de gagner ce sous-jeu \mbox{(figure. \ref{fig:regle}):}
     \caption{Les trois façons pour gagner le sous-jeu.}
     \label{fig:regle}
 \end{figure}
-Ainsi, puisque le premièr joueur ne peut jamais gagner ce sous-jeu, il ne peut pas non plus gagner le (m, n, 8)-jeu. (figure. \ref{fig:m-n-8})
+Ainsi, puisque le premièr joueur ne peut jamais gagner ce sous-jeu, il ne peut pas non plus gagner le (m, n, 8)-jeu. (Figure. \ref{fig:m-n-8})
 \begin{figure}[h!]
     \centering
     \includegraphics{8-sol.eps}
