@@ -20,6 +20,7 @@ Morpion}
 \begin{document}
 
 \maketitle
+\tikzstyle{point}=[circle,draw,thin,fill=white]
 
 \section{Introduction}
 \subsection{La règle du morpion}
@@ -132,12 +133,74 @@ Dans notre fonction, on ne considère que l'état de la grille, et elle n'est pa
     Exemple 3
 \end{center}
 \par
-On utilise l'arbre de décision pour améliorer notre fonction, de sorte que notre fonction \og pense\fg \ à l'étape d'après. Pour le faire, on utilise l'algorithme de minimax. Dans cet algorithme, on utilise notre fonction naïve et la note est calculée par la difference de celle du premier joueur et celle du deuxième joueur. Cette note peut être eventuellement négative. Ainsi, dans le niveau du premier joueur (niveau max), on veux que la note soit plus élevée tandis que la note est plus faible dans le niveau du deuxième joueur (niveau min).\par
+On utilise l'arbre de décision pour améliorer notre fonction, de sorte que notre fonction \og pense\fg \ à l'étape d'après. Pour le faire, on utilise l'algorithme de minimax. Dans cet algorithme, on utilise notre fonction naïve et la note est calculée par la difference de celle du premier joueur et celle du deuxième joueur. Cette note peut être eventuellement négative. Ainsi, dans le niveau du premier joueur (niveau max), on veux que la note soit plus élevée tandis que la note est plus faible dans le niveau du deuxième joueur (niveau min).
+
+%% minimax
+\begin{tikzpicture}[level distance=2cm,
+    level 1/.style={sibling distance=4cm},
+level 2/.style={sibling distance=4cm},
+level 3/.style={sibling distance=1.5cm}]
+\node (n){$\circ$}
+  child {node (n0){27}
+      child {node (n1){27}
+          child {node {4}}
+          child {node (n2){27}}
+          child {node {13}}
+      }
+      child {node (n3){29}
+          child {node {2}}
+          child {node {23}}
+          child {node (n4){29}}
+      }
+    }
+    child {node (n5){$\circ$}
+        child {node (n6){$\vdots$}}
+    };
+    \node[right of=n5,node distance=4cm] {max};
+    \node[right of=n6,node distance=4cm] {min};
+    \node[right of=n4,node distance=4.5cm] {max};
+    \node[right of=n,node distance=6cm] {Origine};
+    \draw[->,draw=red] (n2) -- (n1);
+    \draw[->,draw=red] (n4) -- (n3);
+    \draw[->,draw=red] (n1) -- (n0)
+    ;
+\end{tikzpicture}
+
 %alpha-beta
 Dans l'arbre de décision, on donne la note de la position si c'est une feuille. Lorsqu'on est dans un nœud du niveau max (resp. min), on compare les notes de ses fils et en choisit la plus grande (resp. petite). En pratique, on se donne une hauteur et on fait un parcours en profondeur.\par
-On peut encore améliorer cet algorithme en utilisant l'algorithme de l'élagage alpha-beta. Dans l'algorithme de minimax, on peut couper les arêtes dans certains cas. Par exemple, dans le niveau max, on a déjà déterminé la note d'un nœud 81. Or dans le nœud A, sa note est donnée par le minimum du niveau prochain. Ainsi, dans le niveau prochain, on peut s'arrêter dès qu'on a une note inférieure à 81.
-On appelle $\alpha$-coupure (resp. $\beta$-coupure) lorsqu'on est dans le niveau max (resp. niveau min) et une des notes des fils d'un nœud est inférieure (resp. supérieure) à celle de son frère.\par
-On utilise la fonction améliorée et cherche la stratégie gagnante du premier joueur.
+On peut encore améliorer cet algorithme en utilisant l'algorithme de l'élagage alpha-beta. Dans l'algorithme de minimax, on peut couper les arêtes dans certains cas. Par exemple, dans le niveau max, on a déjà déterminé la note d'un nœud 81. Or dans le nœud A, sa note est donnée par le minimum du niveau prochain. Ainsi, dans le niveau prochain, on peut s'arrêter dès qu'on a une note inférieure à 81. On appelle coupure alpha (resp. coupure beta) lorsqu'on est dans le niveau max (resp. niveau min) et une des notes des fils d'un nœud est inférieure (resp. supérieure) à celle de son frère.
+\begin{tikzpicture}
+%%alpha
+    \node[point] (n0){\ }
+    child {node {81}}
+    child {node[point] (n1){A}
+        child {node (n2){105}}
+        child {node (n3){41}}
+    }
+    ;
+    \node[right of=n1,node distance=2cm] {max};
+    \node[right of=n3,node distance=1.3cm] {min};
+    \node[below of=n2] {Coupure alpha};
+    \draw[-] (n3) to node{X} (n1);
+    \draw[-] (n1) to node{X} (n0);
+%%beta
+    \node[point,right of=n0,node distance=7cm] (n){\ }
+    child {node {40}}
+    child {node[point] (n4){\ }
+        child {node (n5){35}}
+        child {node (n6){77}}
+    }
+    ;
+    \node[right of=n4,node distance=2cm] {min};
+    \node[right of=n6,node distance=1.3cm] {max};
+    \node[below of=n5] {Coupure beta};
+    \draw[-] (n6) to node{X} (n4);
+    \draw[-] (n4) to node{X} (n);
+
+
+\end{tikzpicture}
+
+On utilise la fonction améliorée pour chercher la stratégie gagnante du premier joueur.
 
 \subsection{k $\ge$ 8}
 En effet, si on peut montrer que le premier joueur n'a pas de stratégie gagnante lorsque k = 8, alors le premier joueur n'en a pas pour tout k $\ge$ 8 car la même stratégie du deuxième joueur parvient le premier à aligner 8 symboles. On donne notamment le pairage du cas k = 9 \mbox{(figure. \ref{fig:m-n-9})} car il est plus intuitif.

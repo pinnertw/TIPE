@@ -4,6 +4,7 @@
 
 \usetikzlibrary{trees}
 \begin{document}
+\tikzstyle{point}=[circle,draw,thin,fill=white]
 \gobansize{3}
 \black{b2}
 \copytogoban{2}
@@ -20,6 +21,7 @@
 \copytogoban{6}
 \clear{a3}
 
+%%%% determine tree
 \begin{tikzpicture}[level distance=2cm,
     level 1/.style={sibling distance=4cm},
 level 2/.style={sibling distance=1.5cm}]
@@ -39,4 +41,70 @@ level 2/.style={sibling distance=1.5cm}]
         child {node {$\vdots$}}
     };
 \end{tikzpicture}
+
+%% minimax
+\begin{tikzpicture}[level distance=2cm,
+    level 1/.style={sibling distance=4cm},
+level 2/.style={sibling distance=4cm},
+level 3/.style={sibling distance=1.5cm}]
+\node[point] (n){\ }
+  child {node (n0){27}
+      child {node (n1){27}
+          child {node {4}}
+          child {node (n2){27}}
+          child {node {13}}
+      }
+      child {node (n3){29}
+          child {node {2}}
+          child {node {23}}
+          child {node (n4){29}}
+      }
+    }
+    child {node[point] (n5){\ }
+        child {node (n6){$\vdots$}}
+    };
+    \node[right of=n5,node distance=4cm] {max};
+    \node[right of=n6,node distance=4cm] {min};
+    \node[right of=n4,node distance=4.5cm] {max};
+    \node[right of=n,node distance=6cm] {Origine};
+    \draw[->,draw=red] (n2) -- (n1);
+    \draw[->,draw=red] (n4) -- (n3);
+    \draw[->,draw=red] (n1) -- (n0)
+    ;
+\end{tikzpicture}
+
+%% Alpha coupure
+\begin{tikzpicture}
+%%alpha
+    \node[point] (n0){\ }
+    child {node {81}}
+    child {node[point] (n1){\ }
+        child {node (n2){105}}
+        child {node (n3){41}}
+    }
+    ;
+    \node[right of=n1,node distance=2cm] {max};
+    \node[right of=n3,node distance=1.3cm] {min};
+    \node[below of=n2] {Coupure alpha};
+    \draw[-] (n3) to node{X} (n1);
+    \draw[-] (n1) to node{X} (n0);
+%%beta
+    \node[point,right of=n0,node distance=7cm] (n){\ }
+    child {node {40}}
+    child {node[point] (n4){\ }
+        child {node (n5){35}}
+        child {node (n6){77}}
+    }
+    ;
+    \node[right of=n4,node distance=2cm] {min};
+    \node[right of=n6,node distance=1.3cm] {max};
+    \node[below of=n5] {Coupure beta};
+    \draw[-] (n6) to node{X} (n4);
+    \draw[-] (n4) to node{X} (n);
+
+
+\end{tikzpicture}
+
+
+
 \end{document}
