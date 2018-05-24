@@ -27,9 +27,7 @@ LV1 : glouton
 LV2 : Failled
 LV3 : copy  (alpha-beta)
 LV4 : ameliorer la fonction
-    2.1 : on parle des « meilleures positions », mais cette notion est un peu vague. Explique-la, ou explique que les critères sont étudiés par la suite.
-    2.1.1 : on parle des deux cas possibles (il faudrait d'ailleurs mieux donner le nom de « 3-vivant » que « 3-vivre »), puis dans le troisième cas, on parle d'une note. Cependant, on ne sait pas exactement à quoi correspond ladite note : dans ton introduction, tu ne donnes qu'un exemple, sans définition, et dans le cas où la note est nulle, on ne sait pas à quoi est attribuée cette note : à une intersection ? à une grille ? Par la suite, tu parles de 3^i et 3^(i-1), mais tu ne parles plus de notes. Est-ce la même chose ? Ton exemple 2 n'est pas très compréhensible non plus… Toute cette partie est à revoir.
     2.1.2 : Au lieu de dire Exemple 3.1, écris Exemple 3, grille 1. Ton introduction parle d'état de la grille incorrect dans certains cas, mais ce n'est pas du tout ce qu'illustre ton exemple. Que cherches-tu à montrer ? Précise que la figure suivante (qui n'a d'ailleurs pas de nom : tu dois corriger cela et faire en sorte que toutes tes figures aient un numéro) illustre le choix du parcours.
     Qu'est-ce qu'un pairage ? Tu ne peux pas donner une figure et dire « On voit que » sans aucune autre explication ! Tu te contentes dans cette partie de montrer des figures, mais tu ne donnes aucune preuve. Attends-toi à devoir prouver les résultats que tu affirmes.
 
-Précise clairement dans ton rapport quelle a été ta démarche de travail, tes objectifs et comment tu les as suivi. Ne te contente pas d'exposer ces travaux en t'en détachant complètement (le P veut dire « personnel » dans TIPE).
+comment tu les as suivi
