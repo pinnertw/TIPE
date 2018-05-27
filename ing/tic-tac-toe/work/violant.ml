@@ -27,7 +27,7 @@ let evalue_function x y color=
 let score x y color= 
 	max (evalue_function x y (opponent color)) ((evalue_function x y color) + 1);;
 
-let width = 10;;
+let width = 5;;
 (* cherche *)
 let candidat color =
     let candidats = Array.make_matrix width 3 (-1) in
@@ -93,4 +93,11 @@ new_neighbor (p / 2) (q / 2);;
 white_move (p / 2 - 1) (q / 2 - 1);;
 new_neighbor (p / 2 - 1) (q / 2 - 1);;
 let resultat = cherche Black neighborhood;;
-print_bool resultat;;
+
+restart ();;
+black_move (p / 2) (q / 2);;
+new_neighbor (p / 2) (q / 2);;
+white_move (p / 2) (q / 2 - 1);;
+new_neighbor (p / 2) (q / 2 - 1);;
+let resultat2 = cherche Black neighborhood;;
+print_bool (resultat && resultat2);;

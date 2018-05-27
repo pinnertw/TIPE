@@ -26,8 +26,4 @@ ocamlc base.cmo file.ml -o ouput.out
 LV1 : glouton
 LV2 : Failled
 LV3 : copy  (alpha-beta)
-LV4 : ameliorer la fonction
-    2.1.2 : Au lieu de dire Exemple 3.1, écris Exemple 3, grille 1. Ton introduction parle d'état de la grille incorrect dans certains cas, mais ce n'est pas du tout ce qu'illustre ton exemple. Que cherches-tu à montrer ? Précise que la figure suivante (qui n'a d'ailleurs pas de nom : tu dois corriger cela et faire en sorte que toutes tes figures aient un numéro) illustre le choix du parcours.
-    Qu'est-ce qu'un pairage ? Tu ne peux pas donner une figure et dire « On voit que » sans aucune autre explication ! Tu te contentes dans cette partie de montrer des figures, mais tu ne donnes aucune preuve. Attends-toi à devoir prouver les résultats que tu affirmes.
-
 comment tu les as suivi

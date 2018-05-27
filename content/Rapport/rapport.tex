@@ -42,20 +42,21 @@ Il existe deux méthodes pour déterminer s'il existe une telle stratégie:
 Dans le cas où k $\le$ 7, on utilise la première méthode avec l'arbre de décision. Chaque nœud de cet arbre est un état de la grille. Par exemple (\mbox{Figure. \ref{fig:arbre}}) , la racine de cet arbre est la grille sans symbole. Ensuite, les fils de chaque nœud sont les états de la grille où on place un symbole de plus au dessus. Enfin, les feuilles sont les cas où un des joueurs a gagné ou où personne n'a gagné (c'est-à-dire que la grille a été remplie et que aucun joueur n'a aligné k symboles).
 
 
-Or, la complexité de chercher tous les cas possibles est en O(($m \times n$)!). Ainsi, on utilise une fonction gloutonne pour chercher le cas le \og plus \fg possible. Avec cette fonction, on donne une note à chaque point. Si un point est plus possible pour gagner, alors sa note est plus élevée.\par
+Or, la complexité de chercher tous les cas possibles est en O(($m \times n$)!). Ainsi, on utilise une fonction gloutonne pour chercher le cas le plus probable. Cette fonction attribue une note à chaque point de la grille, d'autant plus élevée qu'est la probabilité de gagner en jouant en ce point.
 On utilise la deuxième méthode lorsque k > 7.
+
 
 \section{Exploitation}
 \subsection{k $\le$ 5}
 Afin de diminuer la complexité, on essaie de créer une fonction qui a l'état de la grille comme entrée et renvoie dix positions: ce sont les positions possibles pour gagner. Ainsi, à chaque nœud de l'arbre de décision, on a diminué le nombre de cas possibles de tous les positions à dix positions.
 \subsubsection{Fonction naïve}
 L'idée est simple: on considère le nombre de symboles non séparés dans une ligne. 
-Pour chaque point sur la grille non occupé par les symboles, on définit la \og note \fg \ à valeur dans $\mathbb{N}$ en ce point. La note est caculée selon les quatre directions, dépend du nombre de symbole du premier joueur (On n'utilise cette fonction que pour le premier joueur). Précisément, il y a trois cas possibles. Pour les deux premiers cas, on appelle i-vivant ou i-mort (\mbox{Figure. \ref{fig:vivmort}}) où i est le nombre de symboles déjà aligné, vivant si les deux cotés sont libres, mort si seul un des deux coté est libre. On donne $3^{i}$ au cas de i-vivant et $3^{i-1}$ au celui de i-mort car i-mort est en effet le cas de (i$+$1)-vivant. En particulier, on donne $3^{k+1}$ au cas où le premier joueur est sûrement gagné, c'est-à-dire k-mort ou (k-1)-vivant. Tenant compte des quatre directions, il y a des autres cas autre que k-mort ou (k-1)-vivant que le premier joueur gagne sûrement. Par exemple (Figure. \ref{fig:directions}), si k $=$ 5, le cas 4-mort-4-mort est un cas gagnant (le deuxième joueur ne peut que prévenir la réussite d'une direction, les deux x). Dans le troisième cas, les deux cotés ne sont pas libres, alors on donne 0 selon cette direction (impossible de compléter en k symboles dans la même ligne). La \og note \fg \ est la somme de ces valeurs selon les quatre directions. Par exemple (\box{Figure. \ref{fig:note}}), au point A, on somme 81 ($3^{4}$, horizontale) et $3\times 3$ ($3^1$,verticale et les deux directions diagonales). La note au point A vaut 90.\par
+Pour chaque point sur la grille non occupé par les symboles, on définit la \og note \fg \ à valeur dans $\mathbb{N}$ en ce point. La note est caculée selon les quatre directions, dépend du nombre de symbole du premier joueur (On n'utilise cette fonction que pour le premier joueur). Précisément, il y a trois cas possibles. Pour les deux premiers cas, on appelle i-vivant ou i-mort (\mbox{Figure. \ref{fig:vivmort}}) où i est le nombre de symboles déjà aligné, vivant si les deux cotés sont libres, mort si seul un des deux coté est libre. On donne $3^{i}$ au cas de i-vivant et $3^{i-1}$ au celui de i-mort car i-mort est en effet le cas de (i$-$1)-vivant. En particulier, on donne $3^{k+1}$ au cas où le premier joueur est sûrement gagné, c'est-à-dire k-mort ou (k-1)-vivant. Tenant compte des quatre directions, il y a des cas autre que k-mort ou (k-1)-vivant que le premier joueur gagne sûrement. Par exemple (Figure. \ref{fig:directions}), si k $=$ 5, le cas 4-mort-4-mort est un cas gagnant (le deuxième joueur ne peut que prévenir la réussite d'une direction, les deux x). Dans le troisième cas, les deux cotés ne sont pas libres, alors on donne 0 selon cette direction (impossible de compléter en k symboles dans la même ligne). La \og note \fg \ est la somme de ces valeurs selon les quatre directions. Par exemple (\box{Figure. \ref{fig:note}}), au point A, on somme 81 ($3^{4}$, horizontale) et $3\times 3$ ($3^1$,verticale et les deux directions diagonales). La note au point A vaut 90.\par
 
 On a ainsi une fonction naïve.
 
 \subsubsection{Améliorer notre fonction avec l'élagage alpha-beta}
-Dans notre fonction, on ne considère que le nombre de symboles dans une ligne et elle n'est pas correcte dans certains cas. Par exemple (\mbox{Figure. \ref{fig:besoin}.1}), au début du jeu, le premier joueur place son symbole au centre de la grille. Ensuite, le deuxième joueur place en haut à gauche du centre. Dans ce cas-là, la fonction renvoie 4 positions (\ref{fig:besoin}.2) avec la même note. Cependant, l'une de ces positions donne l'avantage au deuxième joueur. (\ref{fig:besoin}.3) Dans ce cas-là, le deuxième joueur peut défendre et essayer d'aligner ses symboles en même temps. 
+Dans notre fonction, on ne considère que le nombre de symboles dans une ligne mais cela pose des problèmes. Par exemple (\mbox{Figure. \ref{fig:besoin}.1}), au début du jeu, le premier joueur place son symbole au centre de la grille. Ensuite, le deuxième joueur place en haut à gauche du centre. Dans ce cas-là, la fonction renvoie 4 positions (\mbox{Figure. \ref{fig:besoin}.2}) avec la même note. Cependant, l'une de ces positions donne l'avantage au deuxième joueur. (\mbox{Figure. \ref{fig:besoin}.3}) Dans ce cas-là, le deuxième joueur peut défendre et essayer d'aligner ses symboles en même temps. 
 \par
 On utilise l'arbre de décision pour améliorer notre fonction, de sorte que notre fonction \og pense\fg \ à l'étape d'après. Pour le faire, on utilise l'algorithme de minimax. Dans cet algorithme, on utilise notre fonction naïve et la note est calculée par la difference de celle du premier joueur et celle du deuxième joueur. Cette note peut être eventuellement négative. Ainsi (\mbox{Figure. \ref{fig:minimax}}), dans le niveau du premier joueur (niveau max), on veux que la note soit plus élevée tandis que la note est plus faible dans le niveau du deuxième joueur (niveau min).
 
@@ -65,25 +66,36 @@ On peut encore améliorer cet algorithme en utilisant l'algorithme de l'élagage
 On utilise la fonction améliorée pour chercher la stratégie gagnante du premier joueur.
 
 \subsection{k $\ge$ 8}
-On peut montrer que le premier joueur n'a pas de stratégie gagnante lorsque k~=~8, et donc le premier joueur n'en a pas pour tout k $\ge$ 8 car la réussite du (m, n, k)-jeu où k $\ge$ 8 implique la réussite du (m, n, 8)-jeu. On donne notamment la preuve du cas k = 9 \mbox{(Figure. \ref{fig:m-n-9})} car il est plus intuitif.
-On voit que si le deuxième joueur suit le pairage, alors le premier joueur ne peut jamais réussir (les lignes rouges).\newpage
-Lorsque k = 8, on divise le jeu en des sous-jeux. Ces sous-jeux se jouent sur la grille de la forme comme \mbox{Figure. \ref{fig:sous-jeu}.}
+On peut montrer que le premier joueur n'a pas de stratégie gagnante lorsque k~=~8, et donc le premier joueur n'en a pas pour tout k $\ge$ 8 car la réussite du (m, n, k)-jeu où k $\ge$ 8 implique la réussite du (m, n, 8)-jeu. On donne notamment la preuve du cas k = 9 \mbox{(Figure. \ref{fig:m-n-9})} car il est plus intuitif.\\
+\textit{Dans les figures de la preuve de cette partie, les deux joueurs jouent \og dans les cases \fg \ pour faciliter la lecture.}\par
+
+Dans un (m, n, 9)-jeu, il n'y a que trois directions pour gagner: horizontalement, verticalement et en diagonale. Dans la figure. \ref{fig:m-n-9}, on apparie les cases en liant les deux cases en gris. Par la symétrie, il suffit de regarder l'horizontale et la diagonale. On considére donc les deux lignes rouges. Les deux lignes rouges passent une ligne grise, et puisque ces lignes grises sont invariant par une translation de 8 cases dans les trois directions, toutes les lignes horizontale, verticale ou diagonale de longueur 9 passent une ligne grise. Ainsi, le deuxième joueur suffit de suivre le premier joueur en plaçant son symbole sur la case alignée à celle où le premier joueur place. Le premier joueur ne peut jamais réussir dans ce cas, et donc la stratégie gagnante n'existe pas dans le (m, n, 9)-jeu.\par
+Lorsque k~=~8, on divise le jeu en des sous-jeux. Ces sous-jeux se jouent sur la grille de la forme comme \mbox{Figure. \ref{fig:sous-jeu}.}
 Il y a trois façons de gagner ce sous-jeu \mbox{(Figure. \ref{fig:regle}):}
 \begin{itemize}
     \item Aligner trois symboles en diagonale.
     \item Aligner verticalement deux symboles.
     \item Aligner horizontalement quatre symboles.
 \end{itemize}
-Ainsi, puisque le premièr joueur ne peut jamais gagner ce sous-jeu, il ne peut pas non plus gagner le (m, n, 8)-jeu. (Figure. \ref{fig:m-n-8})
-\section{Conclusion}
-
+On peut montrer que le premièr joueur ne peut jamais gagner ce sous-jeu. On divise la grille initialle en des grilles du sous-jeu (Figure. \ref{fig:m-n-8}). Ainsi, 
 \begin{itemize}
-    \item k = 3
-    \item k = 4
-    \item k = 5
-    \item k $\ge$ 8\\
-        Une telle stratégie n'existe pas.
+    \item toute ligne horizontale de longueur 8 passe une ligne gagnante du sous-jeu (trois symboles en diagonale).
+    \item toute ligne verticale de longueur 8 passe une ligne gagnante du sous-jeu (deux symboles verticales).
+    \item toute ligne horizontale de longueur 8 passe une ligne gagnante du sous-jeu (quatre symboles horizontales).
 \end{itemize}
+Le deuxième joueur suffit de suivre le premier joueur en jouant sur la même grille du sous-jeu. Le premier joueur ne peut jamais gagner le sous-jeu donc le \mbox{(m, n, 8)-jeu}.
+\section{Conclusion}
+On suppose que $m \le n$.\par
+Dans le cas où $k \le 5$, une telle stratégie existe lorsque
+\begin{itemize}
+    \item k = 3\\
+        $m \ge 3$, $n \ge 4$
+    \item k = 4\\
+        $m \ge 4$, $n \ge 5$
+    \item k = 5
+\end{itemize}
+\par
+Dans le cas où $k \ge 8$, il n'existe pas une stratégie gagnante pour le premier joueur.
 
 \section{Annexe}
 
