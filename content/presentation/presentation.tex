@@ -1,4 +1,4 @@
-\documentclass[12pt, a4paper]{article}
+\documentclass{beamer}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
@@ -14,15 +14,16 @@
 \usetikzlibrary{trees}
 
 % Title
-\title{Rapport de TIPE\\
-Morpion}
+\title{Morpion}
 \author{Peng-Wei Chen, MP, \oldstylenums{2017}-\oldstylenums{2018}}
 \date{}
 
 \begin{document}
-
-\maketitle
 \tikzstyle{point}=[circle,draw,thin,fill=white]
+
+\begin{frame}
+    \maketitle
+\end{frame}
 
 \subsection*{Avant-propos}
 Le morpion est un jeu très connu dans le monde dont la stratégie gagnante a été trouvée dans les années 90. Or, on ne sait pas encore si une stratégie gagnante existe lorsque la taille de la grille varie. L'objectif de ce TIPE est de déterminer les tailles de la grille où le premier joueur a une stratégie gagnante.
