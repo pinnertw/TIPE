@@ -1,9 +1,1 @@
 \babel@toc {french}{}
-\beamer@subsectionintoc {0}{1}{M\IeC {\'e}thode}{5}{0}{0}
-\beamer@sectionintoc {1}{Exploitation}{5}{0}{1}
-\beamer@subsectionintoc {1}{1}{k $\le $ 5}{5}{0}{1}
-\beamer@subsubsectionintoc {1}{1}{1}{Fonction na\IeC {\"\i }ve}{5}{0}{1}
-\beamer@subsubsectionintoc {1}{1}{2}{Am\IeC {\'e}liorer notre fonction avec l'\IeC {\'e}lagage alpha-beta}{7}{0}{1}
-\beamer@subsectionintoc {1}{2}{k $\ge $ 8}{8}{0}{1}
-\beamer@sectionintoc {2}{Conclusion}{9}{0}{2}
-\beamer@sectionintoc {3}{Annexe}{10}{0}{3}
