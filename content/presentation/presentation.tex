@@ -13,7 +13,10 @@
 
 \graphicspath{{/home/pgi/TIPE/content/Rapport/image/}}
 \usetikzlibrary{trees}
-
+\usetheme{Warsaw}
+\expandafter\def\expandafter\insertshorttitle\expandafter{%
+    \insertshorttitle\hfill%
+    \insertframenumber\,/\,\inserttotalframenumber} 
 % Title
 \title{Morpion}
 \author{Peng-Wei Chen, MP, \oldstylenums{2017}-\oldstylenums{2018}}
@@ -32,7 +35,7 @@
 \begin{frame}
     \frametitle{Introduction}
     \begin{itemize}
-        \item La règle:
+        \item La règle:\\
 Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacun prend un symbole et on dessine au tour par tour son symbole sur la grille. Le but est d'aligner 5 symboles verticalement, horizontalement ou en diagonale pour gagner.
         \pause
         \item (m, n, k)-jeu
@@ -49,13 +52,16 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
 %%fakesection Methode
 \begin{frame}
     \frametitle{Méthode}
-    \begin{itemize}[<+->]
+\end{frame}
+
+\begin{frame}[t]
+    \frametitle{Méthode}
+    \begin{enumerate}
         \item On cherche tous les cas possibles.
-            \begin{itemize}[<+->]
+            \begin{itemize}
                 \item L'arbre de décision
 % Figure: arbre de decision
-                    \only<2>{
-                    \begin{flushleft}
+                    \only<1>{
                         \gobansize{3}
                         \black{b2}
                         \copytogoban{2}
@@ -91,62 +97,62 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
                             child {node {$\vdots$}}
                         };
                         \end{tikzpicture}
-                \end{flushleft}}
+                    }
+                    \pause
                 \item Complexité O(($m \times n$)!)
+                    \pause
                 \item{Fonction de valuation}
+                    \pause
                 \item k $\le$ 4
             \end{itemize}
-        \item On apparie les points de la grille. Si le deuxième joueur peut toujours prévenir la réussite du premier joueur en jouant le pairage, alors une telle stratégie n'existe pas.
-            \begin{itemize}[<+->]
-                \item k > 7
+        \item<6->On apparie les points de la grille. Si le deuxième joueur peut toujours prévenir la réussite du premier joueur en jouant le pairage, alors une telle stratégie n'existe pas.
+            \begin{itemize}
+                \item<7-> k > 7
             \end{itemize}
 
-    \end{itemize}
+    \end{enumerate}
     \gobansize{10}
     \cleargoban
 \end{frame}
 
-
 %%fakesection fonction naive
-\begin{frame}
+\begin{frame}[t]
     \frametitle{Exploitation - k $\le$ 5}
     \framesubtitle{Fonction naïve}
     On considère le nombre de symboles non séparés dans une ligne.
     \begin{itemize}
-        \item note d'un point sur la grille
-        \item i-vivant / i-mort / mort
+        \item<2-> note d'un point sur la grille
+        \item<3-> i-vivant / i-mort / mort
 %% Exemple: 3-vivant, 3-mort
-    \centering
-        \black{d5,e5,f5}
-        \shortstack{\showgoban\\3-vivant}
-        \white{g5}
-        \shortstack{\showgoban\\3-mort}
-    \\
-    \ \\
-        \white{c5}
-        \clear{e5}
-        \gobansymbol{e5}{A}
-        \shortstack{\showgoban\\La note au point A est nulle pour le noir.}
-
-\cleargoban
-On donne $3^{i}$ au cas de i-vivant et $3^{i-1}$ au celui de i-mort car i-mort est en effet le cas de (i$-$1)-vivant. En particulier, on donne $3^{k+1}$ au cas où le premier joueur est sûrement gagné, c'est-à-dire k-mort ou (k-1)-vivant. 
-        \item L'effet de directions differentes
+            \only<4>{
+            \begin{center}
+                \black{d5,e5,f5}
+                \shortstack{\showgoban\\3-vivant}
+                \white{g5}
+                \shortstack{\showgoban\\3-mort}
+            \\
+            \ \\
+                \white{c5}
+                \clear{e5}
+                \gobansymbol{e5}{A}
+                \shortstack{\showgoban\\La note au point A est nulle pour le noir.}
+                \cleargoban
+            \end{center}
+        On donne $3^{i}$ au cas de i-vivant et $3^{i-1}$ au celui de i-mort car i-mort est en effet le cas de (i$-$1)-vivant. En particulier, on donne $3^{k+1}$ au cas où le premier joueur est sûrement gagné, c'est-à-dire k-mort ou (k-1)-vivant. }
+        \item<5-> L'effet de directions differentes
+             
 %% Exemple: 2 directions
-    \centering
-        \black{d5,e5,f5,g3,g4,g6}
-        \white{c5,g7}
-        \black[\igotriangle]{g5}
-        \gobansymbol{h5,g2}{x}
-        \shortstack{\showgoban}
-\cleargoban
-
+            \only<6>{
+            \begin{center}
+                \black{d5,e5,f5,g3,g4,g6}
+                \white{c5,g7}
+                \black[\igotriangle]{g5}
+                \gobansymbol{h5,g2}{x}
+                \shortstack{\showgoban}
+                \cleargoban
+        \end{center}}
     \end{itemize}
-    La \og note \fg \ est la somme de ces valeurs selon les quatre directions. 
-%% Exemple: note 
-    \centering
-        \black{d5,e5,f5}
-        \gobansymbol{g5}{A}
-        \shortstack{\showgoban}
+\only<7>{La \og note \fg \ est la somme de ces valeurs selon les quatre directions.}
 \end{frame}
 
 %%fakesection exemple de note
@@ -161,12 +167,11 @@ On donne $3^{i}$ au cas de i-vivant et $3^{i-1}$ au celui de i-mort car i-mort e
         \gobansymbol{g5}{A}
         \shortstack{\showgoban}
     \end{center}
-Au point A, on somme 81 ($3^{4}$, horizontale) et $3\times 3$ ($3^1$,verticale et les deux directions diagonales).\\
-La note au point A vaut 90.
+    \center{La note au point A vaut 90 (81 + $3\times 3$).}
 \end{frame}
 
 %%fakesection minimax
-\begin{frame}
+\begin{frame}[t]
     \frametitle{Exploitation - k $\le$ 5}
     \framesubtitle{L'élagage alpha-beta}
 %% Exemple: Besoin de alpha-beta
@@ -188,7 +193,7 @@ La note au point A vaut 90.
             \white{b4}
             \white[\igotriangle]{b3}
             \shortstack{\showfullgoban\\3}
-    \end{center}}
+        \end{center}}
         \begin{itemize}
             \item<2-> L'arbre de décision
             \item<3-> L'algorithme de minimax
@@ -305,20 +310,20 @@ La note au point A vaut 90.
     \frametitle{Exploitation - k $\ge$ 8}
     \framesubtitle{Preuve du cas k~=~8}
     Règle du sous-jeu: trois façons pour gagner.
-\begin{itemize}
-    \item Aligner trois symboles en diagonale.
-    \item Aligner verticalement deux symboles.
-    \item Aligner horizontalement quatre symboles.
+    \begin{itemize}
+        \uncover<2->{\item Aligner trois symboles en diagonale.}
+        \uncover<3->{\item Aligner verticalement deux symboles.}
+        \uncover<4->{\item Aligner horizontalement quatre symboles.}
 %% regle de sous-jeu
         \begin{center}
-            \includegraphics{8-rules1.eps}
-            \includegraphics{8-rules2.eps}
-            \includegraphics{8-rules3.eps}
+            \uncover<2->{\includegraphics[height=1.5cm]{8-rules1.eps}}
+            \uncover<3->{\includegraphics[height=1.5cm]{8-rules2.eps}}
+            \uncover<4->{\includegraphics[height=1.5cm]{8-rules3.eps}}
         \end{center}
 \end{itemize}
 \end{frame}
 
-%%fakesection m-n-8
+%%fakesrction m-n-8
 \begin{frame}
     \frametitle{Exploitation - k $\ge$ 8}
     \framesubtitle{Preuve du cas k~=~8}
@@ -332,14 +337,14 @@ La note au point A vaut 90.
 \begin{frame}
     \frametitle{Conclusion}
 On suppose que $m \le n$.\\
-Dans le cas où $k \le 5$, une telle stratégie existe lorsque
-\begin{itemize}[<+->]
-    \item k = 3\\
+\uncover<2->{Dans le cas où $k \le 5$, une telle stratégie existe lorsque}
+\begin{itemize}
+    \item<3-> k = 3\\
         $m \ge 3$, $n \ge 4$
-    \item k = 4\\
+    \item<4-> k = 4\\
         $m \ge 4$, $n \ge 5$
 \end{itemize}
-\uncover<3->{Dans le cas où $k \ge 8$, il n'existe pas une stratégie gagnante pour le premier joueur.}
+\uncover<5->{Dans le cas où $k \ge 8$, il n'existe pas une stratégie gagnante pour le premier joueur.}
 \end{frame}
 
 \end{document}
