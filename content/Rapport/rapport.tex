@@ -47,7 +47,7 @@ On utilise la deuxième méthode lorsque k > 7.
 
 
 \section{Exploitation}
-\subsection{k $\le$ 5}
+\subsection{k $\le$ 4}
 Afin de diminuer la complexité, on essaie de créer une fonction qui a l'état de la grille comme entrée et renvoie dix positions: ce sont les positions possibles pour gagner. Ainsi, à chaque nœud de l'arbre de décision, on a diminué le nombre de cas possibles de tous les positions à dix positions.
 \subsubsection{Fonction naïve}
 L'idée est simple: on considère le nombre de symboles non séparés dans une ligne. 
@@ -86,13 +86,12 @@ On peut montrer que le premièr joueur ne peut jamais gagner ce sous-jeu. On div
 Le deuxième joueur suffit de suivre le premier joueur en jouant sur la même grille du sous-jeu. Le premier joueur ne peut jamais gagner le sous-jeu donc le \mbox{(m, n, 8)-jeu}.
 \section{Conclusion}
 On suppose que $m \le n$.\par
-Dans le cas où $k \le 5$, une telle stratégie existe lorsque
+Dans le cas où $k \le 4$, une telle stratégie existe lorsque
 \begin{itemize}
     \item k = 3\\
         $m \ge 3$, $n \ge 4$
     \item k = 4\\
         $m \ge 4$, $n \ge 5$
-    \item k = 5
 \end{itemize}
 \par
 Dans le cas où $k \ge 8$, il n'existe pas une stratégie gagnante pour le premier joueur.
