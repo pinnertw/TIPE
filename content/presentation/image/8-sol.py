@@ -56,28 +56,31 @@ for i in range(-taille, taille):
         zigzag(2 + 4 * i, 1 + 6 * j, 1)
         zigzag(2 + 4 * i, 4 + 6 * j, -1)
 
-plt.plot([2.5, 2.5], [1.5, 8.5], color='orange', linewidth=20 / ratio / 2)
-plt.plot([5.5, 12.5], [3.5, 10.5], color='orange', linewidth=20 / ratio / 2)
-plt.plot([7.5, 14.5], [1.5, 1.5], color='orange', linewidth=20 / ratio / 2)
+#straight line
+#plt.plot([2.5, 2.5], [1.5, 8.5], color='orange', linewidth=20 / ratio / 2)
+#diagonal
+#plt.plot([5.5, 12.5], [3.5, 10.5], color='orange', linewidth=20 / ratio / 2)
+#horizon
+#plt.plot([7.5, 14.5], [1.5, 1.5], color='orange', linewidth=20 / ratio / 2)
 
 # Fill with certain color
 def fill(x, y, col):
     plt.fill([x, x+1, x+1, x], [y, y, y+1, y+1], color=col)
 
 # Straight fill
-fill(2, 3, 'red')
-fill(2, 2, 'red')
+#fill(2, 3, 'red')
+#fill(2, 2, 'red')
 
-# Right-up fill
-fill(9, 7, 'green')
-fill(10, 8, 'green')
-fill(11, 9, 'green')
+#Right-up fill
+#fill(9, 7, 'green')
+#fill(10, 8, 'green')
+#fill(11, 9, 'green')
 
-fill(10, 1, 'blue')
-fill(11, 1, 'blue')
-fill(12, 1, 'blue')
-fill(13, 1, 'blue')
-
+#fill(10, 1, 'blue')
+#fill(11, 1, 'blue')
+#fill(12, 1, 'blue')
+#fill(13, 1, 'blue')
+#
 # Save image
-fig.savefig('8-sol.eps', dpi=100)
+fig.savefig('8-sol-initial.eps', dpi=100)
 plt.show()

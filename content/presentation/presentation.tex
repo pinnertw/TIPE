@@ -50,10 +50,6 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
 
 
 %%fakesection Methode
-\begin{frame}
-    \frametitle{Méthode}
-\end{frame}
-
 \begin{frame}[t]
     \frametitle{Méthode}
     \begin{enumerate}
@@ -117,7 +113,7 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
 
 %%fakesection fonction naive
 \begin{frame}[t]
-    \frametitle{Exploitation - k $\le$ 5}
+    \frametitle{Exploitation - k $\le$ 4}
     \framesubtitle{Fonction naïve}
     On considère le nombre de symboles non séparés dans une ligne.
     \begin{itemize}
@@ -127,9 +123,9 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
             \only<4>{
             \begin{center}
                 \black{d5,e5,f5}
-                \shortstack{\showgoban\\3-vivant}
+                \shortstack{\showgoban\\3-vivant\\$3^i$}
                 \white{g5}
-                \shortstack{\showgoban\\3-mort}
+                \shortstack{\showgoban\\3-mort\\$3^{i-1}$}
             \\
             \ \\
                 \white{c5}
@@ -138,7 +134,7 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
                 \shortstack{\showgoban\\La note au point A est nulle pour le noir.}
                 \cleargoban
             \end{center}
-        On donne $3^{i}$ au cas de i-vivant et $3^{i-1}$ au celui de i-mort car i-mort est en effet le cas de (i$-$1)-vivant. En particulier, on donne $3^{k+1}$ au cas où le premier joueur est sûrement gagné, c'est-à-dire k-mort ou (k-1)-vivant. }
+    En particulier, on donne $3^{k+1}$ au cas où le premier joueur est sûrement gagné, c'est-à-dire k-mort ou (k-1)-vivant. }
         \item<5-> L'effet de directions differentes
              
 %% Exemple: 2 directions
@@ -157,7 +153,7 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
 
 %%fakesection exemple de note
 \begin{frame}
-    \frametitle{Exploitation - k $\le$ 5}
+    \frametitle{Exploitation - k $\le$ 4}
     \framesubtitle{Fonction naïve}
     \cleargoban
 
@@ -165,14 +161,15 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
     \begin{center}
         \black{d5,e5,f5}
         \gobansymbol{g5}{A}
-        \shortstack{\showgoban}
+        \gobansymbol{e4}{B}
+        \shortstack{\showfullgoban}
     \end{center}
-    \center{La note au point A vaut 90 (81 + $3\times 3$).}
+    \center{La note au point \only<1>{A vaut 90 (81 + $3\times 3$).}\only<2>{B vaut 30 (3 + $3^2 \times 3$).}}
 \end{frame}
 
 %%fakesection minimax
 \begin{frame}[t]
-    \frametitle{Exploitation - k $\le$ 5}
+    \frametitle{Exploitation - k $\le$ 4}
     \framesubtitle{L'élagage alpha-beta}
 %% Exemple: Besoin de alpha-beta
     On a besoin d'améliorer notre fonction.    
@@ -241,7 +238,7 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
 %%fakesection alpha-beta
 %alpha-beta
 \begin{frame}
-    \frametitle{Exploitation - k $\le$ 5}
+    \frametitle{Exploitation - k $\le$ 4}
     \framesubtitle{L'élagage alpha-beta}
     L'élagage alpha-beta
     \centering
@@ -291,7 +288,9 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
 \begin{frame}
     \frametitle{Exploitation - k $\ge$ 8}
     \framesubtitle{Preuve du cas k~=~9}
-    \includegraphics{m-n-9.eps}
+    \only<1>{\includegraphics{m-n-9-clear.eps}}
+    \only<2>{\includegraphics{m-n-9-horizon.eps}}
+    \only<3>{\includegraphics{m-n-9-vertical.eps}}
 
 \end{frame}
 
@@ -323,13 +322,17 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
 \end{itemize}
 \end{frame}
 
-%%fakesrction m-n-8
+%%fakesection m-n-8
 \begin{frame}
     \frametitle{Exploitation - k $\ge$ 8}
     \framesubtitle{Preuve du cas k~=~8}
     On divise la grille initialle en des grilles du sous-jeu. 
 %% m-n-8
-    \includegraphics[height=5cm]{8-sol.eps}
+    \only<1>{\includegraphics[height=5cm]{8-sol-initial.eps}}
+    \only<2>{\includegraphics[height=5cm]{8-sol-straight.eps}}
+    \only<3>{\includegraphics[height=5cm]{8-sol-horizontal.eps}}
+    \only<4>{\includegraphics[height=5cm]{8-sol-diagonal.eps}}
+    \only<5>{\includegraphics[height=5cm]{8-sol.eps}}
     
 \end{frame}
 
@@ -337,7 +340,7 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
 \begin{frame}
     \frametitle{Conclusion}
 On suppose que $m \le n$.\\
-\uncover<2->{Dans le cas où $k \le 5$, une telle stratégie existe lorsque}
+\uncover<2->{Dans le cas où $k \le 4$, une telle stratégie existe lorsque}
 \begin{itemize}
     \item<3-> k = 3\\
         $m \ge 3$, $n \ge 4$
