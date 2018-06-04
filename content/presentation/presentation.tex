@@ -11,7 +11,7 @@
 \usepackage{amsfonts}
 \usepackage{hyperref}
 
-\graphicspath{{/home/pgi/TIPE/content/Rapport/image/}}
+\graphicspath{{/home/pgi/TIPE/content/presentation/image/}}
 \usetikzlibrary{trees}
 \usetheme{Warsaw}
 \expandafter\def\expandafter\insertshorttitle\expandafter{%
@@ -224,14 +224,15 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
                 \node[right of=n6,node distance=2cm] {min};
                 \node[right of=n4,node distance=2.5cm] {max};
                 \node[right of=n,node distance=3.5cm] {Origine};
-                \draw[->,draw=red] (n2) -- (n1);
-                \draw[->,draw=red] (n4) -- (n3);
-                \draw[->,draw=red] (n1) -- (n0);;
+                \only<5->{\draw[->,draw=red] (n2) -- (n1);}
+                \only<6->{\draw[->,draw=red] (n4) -- (n3);}
+                \only<7->{\draw[->,draw=red] (n1) -- (n0);}
+                ;
             \end{tikzpicture}
         \end{center}
     }
 %% Exemple?
-    \uncover<5>{En pratique, on se donne une hauteur et on fait un parcours en profondeur.}
+    \uncover<8>{En pratique, on se donne une hauteur et on fait un parcours en profondeur.}
 \end{frame}
 
 
