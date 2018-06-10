@@ -101,7 +101,7 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
                     \pause
                 \item k $\le$ 4
             \end{itemize}
-        \item<6->On apparie les points de la grille. Si le deuxième joueur peut toujours prévenir la réussite du premier joueur en jouant le pairage, alors une telle stratégie n'existe pas.
+        \item<6->On apparie les points de la grille. Le deuxième joueur peut toujours prévenir la réussite du premier joueur en jouant le pairage.
             \begin{itemize}
                 \item<7-> k > 7
             \end{itemize}
@@ -205,13 +205,13 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
                 level 2/.style={sibling distance=3cm},
                 level 3/.style={sibling distance=1cm}]
                 \node[point] (n){\ }
-                    child {node (n0){27}
-                        child {node (n1){27}
+                    child {node (n0){\uncover<7->{27}}
+                        child {node (n1){\uncover<5->{27}}
                             child {node {4}}
                             child {node (n2){27}}
                             child {node {13}}
                         }
-                        child {node (n3){29}
+                        child {node (n3){\uncover<6->{29}}
                             child {node {2}}
                             child {node {23}}
                             child {node (n4){29}}
@@ -346,9 +346,9 @@ On suppose que $m \le n$.\\
     \item<3-> k = 3\\
         $m \ge 3$, $n \ge 4$
     \item<4-> k = 4\\
-        $m \ge 4$, $n \ge 5$
+        $m \ge 5$, $n \ge 5$
 \end{itemize}
-\uncover<5->{Dans le cas où $k \ge 8$, il n'existe pas une stratégie gagnante pour le premier joueur.}
+\uncover<5->{Dans le cas où $k \ge 8$, il n'existe pas de stratégie gagnante pour le premier joueur.}
 \end{frame}
 
 \end{document}
