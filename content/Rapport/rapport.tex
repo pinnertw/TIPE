@@ -36,7 +36,7 @@ Dans le cas généralisé, nous appelons (m, n, k)-jeu où la taille de la grill
 Il existe deux méthodes pour déterminer s'il existe une telle stratégie:
 \begin{itemize}
     \item On cherche tous les cas possibles.
-    \item On apparie les points de la grille. Si le deuxième joueur peut toujours prévenir la réussite du premier joueur en jouant le pairage, alors une telle stratégie n'existe pas.
+    \item On apparie les points de la grille. Si le deuxième joueur peut toujours empêcher la réussite du premier joueur en jouant le pairage, alors une telle stratégie n'existe pas.
 \end{itemize}
 
 Dans le cas où k $\le$ 7, on utilise la première méthode avec l'arbre de décision. Chaque nœud de cet arbre est un état de la grille. Par exemple (\mbox{Figure. \ref{fig:arbre}}) , la racine de cet arbre est la grille sans symbole. Ensuite, les fils de chaque nœud sont les états de la grille où on place un symbole de plus au dessus. Enfin, les feuilles sont les cas où un des joueurs a gagné ou où personne n'a gagné (c'est-à-dire que la grille a été remplie et que aucun joueur n'a aligné k symboles).
@@ -51,26 +51,27 @@ On utilise la deuxième méthode lorsque k > 7.
 Afin de diminuer la complexité, on essaie de créer une fonction qui a l'état de la grille comme entrée et renvoie dix positions: ce sont les positions possibles pour gagner. Ainsi, à chaque nœud de l'arbre de décision, on a diminué le nombre de cas possibles de tous les positions à dix positions.
 \subsubsection{Fonction naïve}
 L'idée est simple: on considère le nombre de symboles non séparés dans une ligne. 
-Pour chaque point sur la grille non occupé par les symboles, on définit la \og note \fg \ à valeurs dans $\mathbb{N}$ en ce point. La note est caculée selon les quatre directions, dépend du nombre de symbole du premier joueur (On n'utilise cette fonction que pour le premier joueur). Précisément, il y a trois cas possibles. Pour les deux premiers cas, on appelle i-vivant ou i-mort (\mbox{Figure. \ref{fig:vivmort}}) où i est le nombre de symboles déjà aligné, vivant si les deux cotés sont libres, mort si seul un des deux coté est libre. On donne $3^{i}$ au cas de i-vivant et $3^{i-1}$ au celui de i-mort car i-mort est en effet le cas de (i$-$1)-vivant. En particulier, on donne $3^{k+1}$ au cas où le premier joueur est sûrement gagné, c'est-à-dire k-mort ou (k-1)-vivant. Tenant compte des quatre directions, il y a des cas autre que k-mort ou (k-1)-vivant que le premier joueur gagne sûrement. Par exemple (Figure. \ref{fig:directions}), si k $=$ 5, le cas 4-mort-4-mort est un cas gagnant (le deuxième joueur ne peut que prévenir la réussite d'une direction, les deux x). Dans le troisième cas, les deux cotés ne sont pas libres, alors on donne 0 selon cette direction (impossible de compléter en k symboles dans la même ligne). La \og note \fg \ est la somme de ces valeurs selon les quatre directions. Par exemple (\box{Figure. \ref{fig:note}}), au point A, on somme 81 ($3^{4}$, horizontale) et $3\times 3$ ($3^1$,verticale et les deux directions diagonales). La note au point A vaut 90.\par
+Pour chaque point sur la grille non occupé par les symboles, on définit la \og note \fg \ à valeurs dans $\mathbb{N}$ en ce point. La note est caculée selon les quatre directions, dépend du nombre de symbole du premier joueur (On n'utilise cette fonction que pour le premier joueur). Précisément, il y a trois cas possibles. Pour les deux premiers cas, on appelle i-vivant ou i-mort (\mbox{Figure. \ref{fig:vivmort}}) où i est le nombre de symboles déjà aligné, vivant si les deux cotés sont libres, mort si seul un des deux coté est libre. On donne $3^{i}$ au cas de i-vivant et $3^{i-1}$ au celui de i-mort car i-mort est en effet le cas de (i$-$1)-vivant. En particulier, on donne $3^{k+1}$ au cas où le premier joueur est sûrement gagné, c'est-à-dire k-mort ou (k-1)-vivant. Tenant compte des quatre directions, il y a des cas autre que k-mort ou (k-1)-vivant que le premier joueur gagne sûrement. Par exemple (Figure. \ref{fig:directions}), si k $=$ 5, le cas 4-mort-4-mort est un cas gagnant (le deuxième joueur ne peut que empêcher la réussite d'une direction, les deux x). Dans le troisième cas, les deux cotés ne sont pas libres, alors on donne 0 selon cette direction (impossible de compléter en k symboles dans la même ligne). La \og note \fg \ est la somme de ces valeurs selon les quatre directions. Par exemple (\box{Figure. \ref{fig:note}}), au point A, on somme 81 ($3^{4}$, horizontale) et $3\times 3$ ($3^1$,verticale et les deux directions diagonales). La note au point A vaut 90.\par
+
 
 On a ainsi une fonction naïve.
 
 \subsubsection{Améliorer notre fonction avec l'élagage alpha-beta}
 Dans notre fonction, on ne considère que le nombre de symboles dans une ligne mais cela pose des problèmes. Par exemple (\mbox{Figure. \ref{fig:besoin}.1}), au début du jeu, le premier joueur place son symbole au centre de la grille. Ensuite, le deuxième joueur place en haut à gauche du centre. Dans ce cas-là, la fonction renvoie 4 positions (\mbox{Figure. \ref{fig:besoin}.2}) avec la même note. Cependant, l'une de ces positions donne l'avantage au deuxième joueur (\mbox{Figure. \ref{fig:besoin}.3}). Dans ce cas-là, le deuxième joueur peut défendre et essayer d'aligner ses symboles en même temps. 
 \par
-On utilise l'arbre de décision pour améliorer notre fonction, de sorte que notre fonction \og pense\fg \ à l'étape d'après. Pour le faire, on utilise l'algorithme de minimax. Dans cet algorithme, on utilise notre fonction naïve et la note est calculée par la difference de celle du premier joueur et celle du deuxième joueur. Cette note peut être eventuellement négative. Ainsi (\mbox{Figure. \ref{fig:minimax}}), dans le niveau du premier joueur (niveau max), on veux que la note soit plus élevée tandis que la note est plus faible dans le niveau du deuxième joueur (niveau min).
+On utilise l'arbre de décision pour améliorer notre fonction, de sorte que notre fonction \og pense\fg \ à l'étape d'après. Pour le faire, on utilise l'algorithme de minimax \cite{minimax}. Dans cet algorithme, on utilise notre fonction naïve et la note est calculée par la difference de celle du premier joueur et celle du deuxième joueur. Cette note peut être eventuellement négative. Ainsi (\mbox{Figure. \ref{fig:minimax}}), dans le niveau du premier joueur (niveau max), on veux que la note soit plus élevée tandis que la note est plus faible dans le niveau du deuxième joueur (niveau min).
 
 %alpha-beta
 Dans l'arbre de décision, on donne la note de la position si c'est une feuille. Lorsqu'on est dans un nœud du niveau max (resp. min), on compare les notes de ses fils et en choisit la plus grande (resp. petite). En pratique, on se donne une hauteur et on fait un parcours en profondeur.\par
-On peut encore améliorer cet algorithme en utilisant l'algorithme de l'élagage alpha-beta. Dans l'algorithme de minimax, on peut couper les arêtes dans certains cas. Par exemple (\mbox{Figure. \ref{fig:alpha-beta}}), dans le niveau max, on a déjà déterminé la note d'un nœud 81. Or dans le nœud A, sa note est donnée par le minimum du niveau prochain. Ainsi, dans le niveau prochain, on peut s'arrêter dès qu'on a une note inférieure à 81. On appelle coupure alpha (resp. coupure beta) lorsqu'on est dans le niveau max (resp. niveau min) et une des notes des fils d'un nœud est inférieure (resp. supérieure) à celle de son frère.\par
+On peut encore améliorer cet algorithme en utilisant l'algorithme de l'élagage alpha-beta \cite{alpha-beta}. Dans l'algorithme de minimax, on peut couper les arêtes dans certains cas. Par exemple (\mbox{Figure. \ref{fig:alpha-beta}}), dans le niveau max, on a déjà déterminé la note d'un nœud 81. Or dans le nœud A, sa note est donnée par le minimum du niveau prochain. Ainsi, dans le niveau prochain, on peut s'arrêter dès qu'on a une note inférieure à 81. On appelle coupure alpha (resp. coupure beta) lorsqu'on est dans le niveau max (resp. niveau min) et une des notes des fils d'un nœud est inférieure (resp. supérieure) à celle de son frère.\par
 On utilise la fonction améliorée pour chercher la stratégie gagnante du premier joueur.
 
 \subsection{k $\ge$ 8}
 On peut montrer que le premier joueur n'a pas de stratégie gagnante lorsque k~=~8, et donc le premier joueur n'en a pas pour tout k $\ge$ 8 car la réussite du (m, n, k)-jeu où k $\ge$ 8 implique la réussite du (m, n, 8)-jeu. On donne notamment la preuve du cas k = 9 \mbox{(Figure. \ref{fig:m-n-9})} car il est plus intuitif.\\
 \textit{Dans les figures de la preuve de cette partie, les deux joueurs jouent \og dans les cases \fg \ pour faciliter la lecture.}\par
 
-Dans un (m, n, 9)-jeu, on prouve que le premier joueur ne peut jamais gagné à l'aide de la figure. \ref{fig:m-n-9}. Le deuxième joueur suffit de suivre le premier joueur en plaçant son symbole sur la case reliée à celle sur laquelle le premier joueur place. Par la symétrie, il suffit de regarder l'horizontale et la diagonale. On considère donc les deux lignes rouges. Les deux lignes rouges passent une ligne grise, et puisque ces lignes grises sont invariant par une translation de 8 cases dans les trois directions, toutes les lignes horizontale, verticale ou diagonale de longueur 9 passent une ligne grise. Le premier joueur ne peut jamais réussir dans ce cas, et donc la stratégie gagnante n'existe pas dans le (m, n, 9)-jeu.\par
-Lorsque k~=~8, on divise le jeu en des sous-jeux. Ces sous-jeux se jouent sur la grille de la forme comme \mbox{Figure. \ref{fig:sous-jeu}.}
+Dans un (m, n, 9)-jeu, on prouve que le premier joueur ne peut jamais gagné à l'aide de la figure. \ref{fig:m-n-9} \cite{9-win}. Le deuxième joueur suffit de suivre le premier joueur en plaçant son symbole sur la case reliée à celle sur laquelle le premier joueur place. Par la symétrie, il suffit de regarder l'horizontale et la diagonale. On considère donc les deux lignes rouges. Les deux lignes rouges passent une ligne grise, et puisque ces lignes grises sont invariant par une translation de 8 cases dans les trois directions, toutes les lignes horizontale, verticale ou diagonale de longueur 9 passent une ligne grise. Le premier joueur ne peut jamais réussir dans ce cas, et donc la stratégie gagnante n'existe pas dans le (m, n, 9)-jeu.\par
+Lorsque k~=~8, on divise le jeu en des sous-jeux \cite{8-win}. Ces sous-jeux se jouent sur la grille de la forme comme \mbox{Figure. \ref{fig:sous-jeu}.}
 Il y a trois façons de gagner ce sous-jeu \mbox{(Figure. \ref{fig:regle}):}
 \begin{itemize}
     \item Aligner trois symboles en diagonale.
@@ -96,10 +97,12 @@ Dans le cas où $k \le 4$, une telle stratégie existe lorsque
 \par
 Dans le cas où $k \ge 8$, il n'existe pas une stratégie gagnante pour le premier joueur.
 
+\newpage
+
 \section{Annexe}
 
 %% Figure: arbre de decision
-\begin{figure}[h]
+\begin{figure}[htp]
     \centering
     \gobansize{3}
     \black{b2}
@@ -143,7 +146,7 @@ level 2/.style={sibling distance=1.5cm}]
 \cleargoban
 
 %% Exemple: 3-vivant, 3-mort
-\begin{figure}[h]
+\begin{figure}[htp]
     \centering
         \black{d5,e5,f5}
         \shortstack{\showgoban\\3-vivant}
@@ -161,7 +164,7 @@ level 2/.style={sibling distance=1.5cm}]
 
 \cleargoban
 %% Exemple: 2 directions
-\begin{figure}[h]
+\begin{figure}[htp]
     \centering
         \black{d5,e5,f5,g3,g4,g6}
         \white{c5,g7}
@@ -174,7 +177,7 @@ level 2/.style={sibling distance=1.5cm}]
 \cleargoban
 
 %% Exemple: note 
-\begin{figure}[h]
+\begin{figure}[htp]
     \centering
         \black{d5,e5,f5}
         \gobansymbol{g5}{A}
@@ -184,7 +187,7 @@ level 2/.style={sibling distance=1.5cm}]
 \end{figure}
 
 %% Exemple: Besoin de alpha-beta
-\begin{figure}[h]
+\begin{figure}[htp]
     \centering
     \cleargoban
     \gobansize{5}
@@ -206,7 +209,7 @@ level 2/.style={sibling distance=1.5cm}]
 \end{figure}
 
 %% Exemple: minimax
-\begin{figure}[h]
+\begin{figure}[htp]
     \centering
     \begin{tikzpicture}[level distance=2cm,
         level 1/.style={sibling distance=4cm},
@@ -240,7 +243,7 @@ level 2/.style={sibling distance=1.5cm}]
     \label{fig:minimax}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[htp]
     \centering
     \begin{tikzpicture}
 %%alpha
@@ -275,7 +278,7 @@ level 2/.style={sibling distance=1.5cm}]
 \end{figure}
 
 %% m-n-9
-\begin{figure}[h]
+\begin{figure}[htp]
     \centering
     \includegraphics{m-n-9.eps}
     \caption{(m, n, 9)-jeu}
@@ -283,7 +286,7 @@ level 2/.style={sibling distance=1.5cm}]
 \end{figure}
 
 %% sous-jeu
-\begin{figure}[h]
+\begin{figure}[htp]
     \centering
     \includegraphics{m-n-8-little.eps}
     \caption{La grille du sous-jeu}
@@ -291,7 +294,7 @@ level 2/.style={sibling distance=1.5cm}]
 \end{figure}
 
 %% regle de sous-jeu
-\begin{figure}[h]
+\begin{figure}[htp]
     \centering
     \includegraphics{8-rules1.eps}
     \includegraphics{8-rules2.eps}
@@ -301,11 +304,27 @@ level 2/.style={sibling distance=1.5cm}]
 \end{figure}
 
 %% m-n-8
-\begin{figure}[h]
+\begin{figure}[htp]
     \centering
     \includegraphics{8-sol.eps}
     \caption{(m, n, 8)-jeu:
     toutes les lignes de longueur 8 passent une des lignes gagantes du sous-jeu.}
     \label{fig:m-n-8}
 \end{figure}
+
+\newpage
+\ 
+\section{Bibliographie}
+\renewcommand{\section}[2]{}%
+\begin{thebibliography}{10}
+\bibitem{minimax}
+    Guillermo Owen, (1967) Communications to the Editor-An Elementary Proof of the Minimax Theorem. Management Science 13(9) 765-765
+\bibitem{alpha-beta}
+    Stuart Russell, Peter Norvig. Artificial Intelligence-A Modern Approach Prentice Hall (2010) 167-171
+\bibitem{9-win}
+    Hales, A.W., Jewett, R.I. (1963). Regularity and positional games. Transactions of the American Mathematical Society 106 222-229.
+\bibitem{8-win}
+    Zetters, T.G.L. Problem S.10 proposed by R.K.Guy and J.L. Selfridge, The American Mathematical Monthly 86 (1979), solution 87 575-576.
+\end{thebibliography}
+
 \end{document}
