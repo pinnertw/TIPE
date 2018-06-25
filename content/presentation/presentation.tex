@@ -4,8 +4,6 @@
 \usepackage[french]{babel}
 \usepackage{geometry}
 \usepackage{graphicx}
-\usepackage{wrapfig}
-\usepackage{indentfirst}
 \usepackage{tikz}
 \usepackage{igo}
 \usepackage{amsfonts}
@@ -101,7 +99,7 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
                     \pause
                 \item k $\le$ 4
             \end{itemize}
-        \item<6->On apparie les points de la grille. Le deuxième joueur peut toujours prévenir la réussite du premier joueur en jouant le pairage.
+        \item<6->On apparie les points de la grille. Le deuxième joueur peut toujours empêcher la réussite du premier joueur en jouant le pairage.
             \begin{itemize}
                 \item<7-> k > 7
             \end{itemize}
@@ -190,6 +188,7 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
             \white{b4}
             \white[\igotriangle]{b3}
             \shortstack{\showfullgoban\\3}
+            \cleargoban
         \end{center}}
         \begin{itemize}
             \item<2-> L'arbre de décision
@@ -199,40 +198,57 @@ Deux joueurs jouent sur une grille de taille $15 \times 15$ sur le papier. Chacu
         \uncover<4->{
         Note = difference des notes de deux joueurs
 %% Exemple: minimax
+        \gobansize{3}
         \begin{center}
-            \begin{tikzpicture}[level distance=1cm,
+            \begin{tikzpicture}[level distance=1.3cm,
                 level 1/.style={sibling distance=3cm},
                 level 2/.style={sibling distance=3cm},
                 level 3/.style={sibling distance=1cm}]
-                \node[point] (n){\ }
-                    child {node (n0){\uncover<7->{27}}
-                        child {node (n1){\uncover<5->{27}}
-                            child {node {4}}
-                            child {node (n2){27}}
-                            child {node {13}}
+                \node (n){\showfullgoban \black{b2}}
+                child {node (n0){\only<5-20>{\showfullgoban} \only<21->{27} \white{a2}}
+                    child {node (n1){\only<6-12>{\showfullgoban} \only<13->{27}\black{a3}}
+                        child {node (n7){\only<7>{\showfullgoban} \only<8->{4}}
+                        \clear{a3}
+                        \black{b3}}
+                        child {node (n2){\only<9>{\showfullgoban} \only<10->{27}}
+                        \clear{b3}
+                        \black{c3}}
+                        child {node (n8){\only<11>{\showfullgoban} \only<12->{13}}
+                        \clear{c3}}
                         }
-                        child {node (n3){\uncover<6->{29}}
-                            child {node {2}}
-                            child {node {23}}
-                            child {node (n4){29}}
+                    child {node (n3){\white{a3} \only<6-19>{\showfullgoban} \only<20->{29} \black{a2}}
+                        child {node (n9){\only<14>{\showfullgoban} \only<15->{2}}
+                        \clear{a2}
+                        \black{a1}}
+                        child {node (n10){\only<16>{\showfullgoban} \only<17->{23}}
+                        \clear{a1}
+                        \black{b1}}
+                        child {node (n4){\only<18>{\showfullgoban} \only<19->{29}} \cleargoban \black{a2}}
                         }
                     }
-                    child {node[point] (n5){\ }
+                    child {node (n5){\uncover<5->{\showfullgoban}}
                     child {node (n6){$\vdots$}}
                 };
                 \node[right of=n5,node distance=2cm] {max};
                 \node[right of=n6,node distance=2cm] {min};
                 \node[right of=n4,node distance=2.5cm] {max};
                 \node[right of=n,node distance=3.5cm] {Origine};
-                \only<5->{\draw[->,draw=red] (n2) -- (n1);}
-                \only<6->{\draw[->,draw=red] (n4) -- (n3);}
-                \only<7->{\draw[->,draw=red] (n1) -- (n0);}
+                \only<13->{\draw[->,draw=red] (n2) -- (n1);}
+                \only<20->{\draw[->,draw=red] (n4) -- (n3);}
+                \only<21->{\draw[->,draw=red] (n1) -- (n0);}
+                \only<7->{\draw[-] (n7) -- (n1);}
+                \only<9-12>{\draw[-] (n2) -- (n1);}
+                \only<11->{\draw[-] (n8) -- (n1);}
+                \only<14->{\draw[-] (n9) -- (n3);}
+                \only<16->{\draw[-] (n10) -- (n3);}
+                \only<18-19>{\draw[-] (n4) -- (n3);}
                 ;
             \end{tikzpicture}
         \end{center}
     }
 %% Exemple?
-    \uncover<8>{En pratique, on se donne une hauteur et on fait un parcours en profondeur.}
+    \uncover<22>{En pratique, on se donne une hauteur et on fait un parcours en profondeur.}
+    \cleargoban
 \end{frame}
 
 
