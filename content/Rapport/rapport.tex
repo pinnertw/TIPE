@@ -9,6 +9,7 @@
 \usepackage{tikz}
 \usepackage{igo}
 \usepackage{amsfonts}
+\usepackage{pdfpages}
 
 \graphicspath{{/home/pgi/TIPE/content/Rapport/image/}}
 \usetikzlibrary{trees}
@@ -20,7 +21,6 @@ Morpion}
 \date{}
 
 \begin{document}
-
 \maketitle
 \tikzstyle{point}=[circle,draw,thin,fill=white]
 
@@ -39,7 +39,7 @@ Il existe deux méthodes pour déterminer s'il existe une telle stratégie:
     \item On apparie les points de la grille. Si le deuxième joueur peut toujours empêcher la réussite du premier joueur en jouant le pairage, alors une telle stratégie n'existe pas.
 \end{itemize}
 
-Dans le cas où k $\le$ 7, on utilise la première méthode avec l'arbre de décision. Chaque nœud de cet arbre est un état de la grille. Par exemple (\mbox{Figure. \ref{fig:arbre}}) , la racine de cet arbre est la grille sans symbole. Ensuite, les fils de chaque nœud sont les états de la grille où on place un symbole de plus au dessus. Enfin, les feuilles sont les cas où un des joueurs a gagné ou où personne n'a gagné (c'est-à-dire que la grille a été remplie et que aucun joueur n'a aligné k symboles).
+Dans le cas où k $\le$ 7, on utilise la première méthode avec l'arbre de décision. Chaque nœud de cet arbre est un état de la grille. Par exemple (\mbox{Figure. \ref{fig:arbre}}), la racine de cet arbre est la grille sans symbole. Ensuite, les fils de chaque nœud sont les états de la grille où on place un symbole de plus au dessus. Enfin, les feuilles sont les cas où un des joueurs a gagné ou où personne n'a gagné (c'est-à-dire que la grille a été remplie et que aucun joueur n'a aligné k symboles).
 
 
 Or, la complexité de chercher tous les cas possibles est en O(($m \times n$)!). Ainsi, on utilise une fonction gloutonne pour chercher le cas le plus probable. Cette fonction attribue une note à chaque point de la grille, d'autant plus élevée qu'est la probabilité de gagner en jouant en ce point.
@@ -51,7 +51,7 @@ On utilise la deuxième méthode lorsque k > 7.
 Afin de diminuer la complexité, on essaie de créer une fonction qui a l'état de la grille comme entrée et renvoie dix positions: ce sont les positions possibles pour gagner. Ainsi, à chaque nœud de l'arbre de décision, on a diminué le nombre de cas possibles de tous les positions à dix positions.
 \subsubsection{Fonction naïve}
 L'idée est simple: on considère le nombre de symboles non séparés dans une ligne. 
-Pour chaque point sur la grille non occupé par les symboles, on définit la \og note \fg \ à valeurs dans $\mathbb{N}$ en ce point. La note est caculée selon les quatre directions, dépend du nombre de symbole du premier joueur (On n'utilise cette fonction que pour le premier joueur). Précisément, il y a trois cas possibles. Pour les deux premiers cas, on appelle i-vivant ou i-mort (\mbox{Figure. \ref{fig:vivmort}}) où i est le nombre de symboles déjà aligné, vivant si les deux cotés sont libres, mort si seul un des deux coté est libre. On donne $3^{i}$ au cas de i-vivant et $3^{i-1}$ au celui de i-mort car i-mort est en effet le cas de (i$-$1)-vivant. En particulier, on donne $3^{k+1}$ au cas où le premier joueur est sûrement gagné, c'est-à-dire k-mort ou (k-1)-vivant. Tenant compte des quatre directions, il y a des cas autre que k-mort ou (k-1)-vivant que le premier joueur gagne sûrement. Par exemple (Figure. \ref{fig:directions}), si k $=$ 5, le cas 4-mort-4-mort est un cas gagnant (le deuxième joueur ne peut que empêcher la réussite d'une direction, les deux x). Dans le troisième cas, les deux cotés ne sont pas libres, alors on donne 0 selon cette direction (impossible de compléter en k symboles dans la même ligne). La \og note \fg \ est la somme de ces valeurs selon les quatre directions. Par exemple (\box{Figure. \ref{fig:note}}), au point A, on somme 81 ($3^{4}$, horizontale) et $3\times 3$ ($3^1$,verticale et les deux directions diagonales). La note au point A vaut 90.\par
+Pour chaque point sur la grille non occupé par les symboles, on définit la \og note \fg \ à valeurs dans $\mathbb{N}$ en ce point. La note est caculée selon les quatre directions, dépend du nombre de symbole du premier joueur (On n'utilise cette fonction que pour le premier joueur). Précisément, il y a trois cas possibles. Pour les deux premiers cas, on appelle i-vivant ou i-mort (\mbox{Figure. \ref{fig:vivmort}}) où i est le nombre de symboles déjà aligné, vivant si les deux cotés sont libres, mort si seul un des deux coté est libre. On donne $3^{i}$ au cas de i-vivant et $3^{i-1}$ au celui de i-mort car i-mort est en effet le cas de (i$-$1)-vivant. En particulier, on donne $3^{k+1}$ au cas où le premier joueur est sûrement gagné, c'est-à-dire k-mort ou (k-1)-vivant. Tenant compte des quatre directions, il y a des cas autre que k-mort ou (k-1)-vivant que le premier joueur gagne sûrement. Par exemple (Figure. \ref{fig:directions}), si k $=$ 5, le cas 4-mort-4-mort est un cas gagnant (le deuxième joueur ne peut que empêcher la réussite d'une direction, les deux x). Dans le troisième cas, les deux cotés ne sont pas libres, alors on donne 0 selon cette direction (impossible de compléter en k symboles dans la même ligne). La \og note \fg \ est la somme de ces valeurs selon les quatre directions. Par exemple (\box{Figure. \ref{fig:note}}), au point A, on somme 81 ($3^{4}$, horizontale) et $3\times 3$ ($3^1$, verticale et les deux directions diagonales). La note au point A vaut 90.\par
 
 
 On a ainsi une fonction naïve.
@@ -63,7 +63,7 @@ On utilise l'arbre de décision pour améliorer notre fonction, de sorte que not
 
 %alpha-beta
 Dans l'arbre de décision, on donne la note de la position si c'est une feuille. Lorsqu'on est dans un nœud du niveau max (resp. min), on compare les notes de ses fils et en choisit la plus grande (resp. petite). En pratique, on se donne une hauteur et on fait un parcours en profondeur.\par
-On peut encore améliorer cet algorithme en utilisant l'algorithme de l'élagage alpha-beta \cite{alpha-beta}. Dans l'algorithme de minimax, on peut couper les arêtes dans certains cas. Par exemple (\mbox{Figure. \ref{fig:alpha-beta}}), dans le niveau max, on a déjà déterminé la note d'un nœud 81. Or dans le nœud A, sa note est donnée par le minimum du niveau prochain. Ainsi, dans le niveau prochain, on peut s'arrêter dès qu'on a une note inférieure à 81. On appelle coupure alpha (resp. coupure beta) lorsqu'on est dans le niveau max (resp. niveau min) et une des notes des fils d'un nœud est inférieure (resp. supérieure) à celle de son frère.\par
+On peut encore améliorer cet algorithme en utilisant l'algorithme de l'élagage \mbox{alpha-beta \cite{alpha-beta}}. Dans l'algorithme de minimax, on peut couper les arêtes dans certains cas. Par exemple (\mbox{Figure. \ref{fig:alpha-beta}}), dans le niveau max, on a déjà déterminé la note d'un nœud 81. Or dans le nœud A, sa note est donnée par le minimum du niveau prochain. Ainsi, dans le niveau prochain, on peut s'arrêter dès qu'on a une note inférieure à 81. On appelle coupure alpha (resp. coupure beta) lorsqu'on est dans le niveau max (resp. niveau min) et une des notes des fils d'un nœud est inférieure (resp. supérieure) à celle de son frère.\par
 On utilise la fonction améliorée pour chercher la stratégie gagnante du premier joueur.
 
 \subsection{k $\ge$ 8}
